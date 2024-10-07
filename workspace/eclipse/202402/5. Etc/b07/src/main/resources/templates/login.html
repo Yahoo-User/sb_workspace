@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login.html</title>
+</head>
+<body th:align="left">
+
+    <h1>/templates/login.html</h1>
+    
+    <hr>
+
+    <h3>Welcome ^^</h3>
+
+
+    <!-- 2. XX : If action attr value specified directly, the below exception raised.
+        org.thymeleaf.exceptions.TemplateInputException: 
+            An error happened during template parsing (template: "class path resource [templates/login.html]") -->
+    <!-- <form method="post" th:action="/login"> -->
+        
+    <!-- 1. OK: Automatically process post request in the Spring Security -->
+    <form method="post">
+
+        <table th:border="1" th:cellspacing="0" th:cellpadding="0">
+            <tr>
+                <td th:bgcolor="orange">Username</td>
+                <td><input type="text" name="username"></td>
+            </tr>
+
+            <tr>
+                <td th:bgcolor="orange">Password</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" th:align="center">
+                    <input type="submit" value="Sign in">
+                </td>
+            </tr>
+        </table>
+
+    </form>
+    
+</body>
+</html>

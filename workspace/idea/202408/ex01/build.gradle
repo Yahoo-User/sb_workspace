@@ -1,0 +1,76 @@
+plugins {
+	id 'java'
+	id 'war'
+
+	id 'org.springframework.boot' version '3.2.3'
+	id 'io.spring.dependency-management' version '1.1.4'
+} // plugins
+
+group = 'org.zerock'
+version = '0.0.1-SNAPSHOT'
+status
+
+java {
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
+} // java
+
+sourceSets {
+	main {
+		java {
+			srcDirs = [  'src/main/java' ]
+		}
+		resources {
+			srcDirs = [ 'src/main/resources' ]
+		}
+	} // main
+
+	test {
+		java {
+			srcDirs = [ 'src/test/java' ]
+		}
+		resources {
+			srcDirs = [ 'src/test/resources' ]
+		}
+	} // test
+} // sourceSets
+
+configurations {
+	implementation
+	testImplementation
+	providedRuntime
+	developmentOnly
+	annotationProcessor
+	testAnnotationProcessor
+
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+
+	testCompileOnly {
+		extendsFrom testAnnotationProcessor
+	}
+} // configurations
+
+repositories {
+	mavenCentral()
+} // repositories
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+} // dependencies
+
+//test {
+tasks.named('test') {
+	useJUnitPlatform()
+} // test
+
+

@@ -1,0 +1,8 @@
+
+***********************************************
+*                                             *
+*         To be rich soon, Yoseph !           *
+*         Don't forget it. Never  !           *
+*                ${spring-boot.formatted-version}
+*                                             *
+***********************************************

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>Board List</title>
+
+	<style>
+		div {
+			text-align: left;
+			width: 950px;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+		table, tr, th, td {
+			border: 1px solid black;
+		}
+		tr:nth-of-type(1) {
+			width: 100px;
+			background-color: aqua;
+		}
+		tr:hover {
+			background-color: blanchedalmond;
+		}
+		tr > th, td {
+			text-align: center;
+		}
+		tr > td:nth-of-type(2) {
+			width: 42%;
+			text-align: left;
+			padding-left: 5px;
+		}
+		a {
+			text-decoration: none;
+		}
+		.pagination {
+			margin: 0 0;
+			padding: 5px 0;
+			width: 100%;
+			border: 0px solid red;
+			text-align: center;
+		}
+		.pagination > li {
+			display: inline-block;
+			width: 40px;
+			border-right: 1px solid purple;
+			text-align: center;
+		}
+		.pagination > li:first-of-type {
+			border-left: 1px solid purple;
+		}
+		a.current {
+			color: red;
+			font-weight: bold;
+		}
+		strong {
+			color: red;
+		}
+	</style>
+</head>
+
+<body th:align="left">
+    <h3>/templates/board/getBoardList.html</h3>
+    <hr>
+
+	<div>
+        <h3 th:text="${ 'Board List' }"></h3>
+
+		<div th:if="${session._MEMBER_ != null}">
+			<p>&&& Welcome to board list, <strong th:text="${session._MEMBER_.name}"></strong></a> &&&</p>
+		</div>
+
+        <table>
+            <tr>
+                <td>Seq</td>
+                <td>Title</td>
+                <td>Writer</td>
+                <td>CreateDate</td>
+                <td>UpdateDate</td>
+                <td>Cnt</td>
+
+                <td>state<br>count</td>
+                <td>state<br>index</td>
+            </tr>
+
+            <tr th:each="board, state : ${_PAGE_}">
+                <td th:text="${board.seq}">
+                <td><a th:href="@{ getBoard ( seq=${board.seq}, currPage=${_PAGE_.number + 1} ) }" th:text="${board.title}"></a>
+                <td th:text="${board.writer}">
+                <td th:text="${ #dates.format(board.createDate, 'yyyy-MM-dd HH:mm:ss.SSS') }">
+                <td th:text="${ #dates.format(board.updateDate, 'yyyy/MM/dd HH:mm:ss.SSS') }">
+                <td th:text="${board.cnt}">
+                <td th:text="${state.count}">
+                <td th:text="${state.index}">
+            </tr>
+        </table>
+		<br>
+
+		<ul class="pagination">
+			<li th:if="${!_PAGE_.first}"><a th:href="@{ getBoardList (currPage=1) }" th:text="F"></a></li>
+			<li th:if="${_PAGE_.hasPrevious()}"><a th:href="@{ getBoardList ( currPage=${_PAGE_.number} ) }" th:text="P"></a></li>
+			
+			<li th:each="counter : ${ #numbers.sequence( 1, _PAGE_.totalPages ) }">
+				<i th:if="${_PAGE_.number + 1 == counter}">
+					<a th:href="@{ getBoardList ( currPage=${counter} ) }" th:class="current"  th:text="${counter}"></a>
+				</i>
+				<i th:if="${_PAGE_.number + 1 != counter}">
+					<a th:href="@{ getBoardList ( currPage=${counter} ) }" th:text="${counter}"></a>
+				</i>
+			</li>
+			
+			<li th:if="${_PAGE_.hasNext()}"><a th:href="@{ getBoardList ( currPage=${_PAGE_.number + 2} ) }" th:text="N"></a></li>
+			<li th:if="${!_PAGE_.last}"><a th:href="@{ getBoardList ( currPage=${_PAGE_.totalPages} ) }" th:text="L"></a></li>
+		</ul>
+		<br>
+
+		<div>
+	        <a th:href="@{ register ( currPage=${_PAGE_.number + 1} ) }" th:text="${ '(1) REGISTER' }"></a><br>
+			<a th:href="@{ registerWithDTO ( currPage=${_PAGE_.number + 1} ) }" th:text="${ '(2) REGISTER with DTO' }"></a><br>
+			<a th:href="@{ /security/logout }" th:text="${ '(3) LOGOUT' }"></a>
+		</div>
+    </div>
+</body>
+
+</html>
+

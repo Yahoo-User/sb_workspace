@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>getBoardList.html</title>
+</head>
+<body th:align="left">
+    <h1>/templates/getBoardList.html</h1>
+
+    <hr>
+
+    <code th:text="${session}"></code>
+    <h3>Welcome, <id th:text="${session['member'].id}"></id></h3>
+
+    <code><a th:href="@{/insertBoard}" th:text="${'REGISTER'}"></a></code>
+    <code><a th:if="${session['member'].role == 'role1'}"
+             th:href="@{/deleteBoard}" th:text="${'DELETE'}"></a></code>
+    <code><a th:href="@{/getBoardList}" th:text="${'LIST'}"></a></code>
+    <code><a th:href="@{/logout}" th:text="${'LOGOUT'}"></a></code>
+
+    <table>
+        <tr th:each="board, state : ${boardList}">
+            <!-- <td th:text="${state.getClass().getName()}"></td> -->
+            <td th:text="${state.count}"></td>
+            <td th:text="${board.seq}"></td>
+            <td><a th:href="@{/getBoard(seq=${board.seq}, cnt=${board.cnt})}" th:text="${board.title}"></a></td>
+            <td th:text="${board.content}"></td>
+            <td th:text="${board.writer}"></td>
+            <td th:text="${board.cnt}"></td>
+            <!-- <td th:text="${board.createDate}"></td> -->
+            <td th:text="${#dates.format(board.createDate, 'yyyy-MM-dd')}"></td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>customError</title>
+</head>
+<body>
+	<h3>/templates/errors/customError.html</h3>
+	<hr>
+
+	<div>
+		<h3>Exception Information: </h3>
+		
+		<ul style="font-size: 16px; font-weight: bold;">
+			<li th:text="${ 'Exception: ' + _EXCEPTION_.class.simpleName}">
+			<li>Message: [[ ${_EXCEPTION_.message } ]]
+			<li><a th:href="@{/}" th:text="${'Back To Main'}"></a></li>
+		</ul>
+		<hr>
+		
+		<ol style="text-decoration: none; color: red; font-size: 16px; font-weight: bold;'">
+			<li th:each="stackTrace : ${ _EXCEPTION_.stackTrace }">at [[ ${stackTrace} ]]</li>
+		</ol>
+	</div>
+</body>
+</html>

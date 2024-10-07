@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+    
+    <style>
+        div {
+            width: 300px;
+            text-align: center;
+            padding: 10px;
+        }
+        table {
+        	width: 100%;
+            border-collapse: collapse;
+        }
+        table, tr, td {
+        	border: 0px solid black;
+        }
+        td {
+            padding: 5px;
+        }
+        td:nth-of-type(2) {
+            width: 70%;
+            text-align: left;
+            padding-left: 10px;
+        }
+        tr:last-of-type > td {
+            padding: 10px;
+        }
+        strong {
+            color: red;
+        }
+        ul#theach > li {
+            display: inline-block;
+            width: 30px;
+            border-right: 1px solid orange;
+
+            text-decoration: none;
+            text-align: center;
+        }
+        ul#theach > li:first-of-type {
+            border-left: 1px solid orange;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>/templates/security/login.html</h3>
+    <hr>
+    
+	<div style="width:270px;" th:text="${ '1. HOW TO USE LOOP STATUS PROPERTIES:' }"></div>
+	
+    <ul>
+        <li th:each="counter, status : ${#numbers.sequence(1, 10)}" th:text="${'index: ' + status.index + ', count: ' + status.count + ', counter: ' + counter}">item</li>
+    </ul>
+
+	<div style="width:180px;" th:text="${ '2. HOW TO MAKE FOR LOOP:' }"></div>
+		
+    <ul id="theach">
+        <li th:each="counter : ${#numbers.sequence(1, 7)}" th:text="${counter}">item</li>
+    </ul>
+    
+    <div style="width:363px;" th:text=
+    	"${ '3. HOW TO USE JAVA CONSTANTS: ' + 
+    		  T(org.zerock.myapp.util.SharedAttributes).CREDENTIAL + ', ' + 
+    		  T(org.zerock.myapp.util.SharedAttributes).LOGIN_ID }"></div>
+    
+    <div>
+        <div th:if="${ param[ T(org.zerock.myapp.util.SharedAttributes).LOGIN_ID ] != null }">
+        	* Login Failed: <strong th:text="${ param[ T(org.zerock.myapp.util.SharedAttributes).LOGIN_ID ] }"></strong>
+        </div>
+
+        <form th:action="${'login'}" th:method="POST">
+            <table>
+                <tr>
+                    <td th:text="Username">
+                    <td><input type="text" th:name="name" size="25" required></td>
+                </tr>
+                <tr>
+                    <td th:text="Password">
+                    <td><input type="password" th:name="password" size="25" required></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" th:value="Sign-in">
+                        <input type="reset" th:value="Reset">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+</body>
+
+</html>
+
+

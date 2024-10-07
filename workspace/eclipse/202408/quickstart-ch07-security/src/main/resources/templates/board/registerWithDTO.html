@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>Register with DTO</title>
+
+    <style>
+        div {
+            width: 700px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            text-align: center;
+        }
+        table td {
+            width: 80%;
+            height: 25px;
+            padding-left: 10px;
+
+            text-align: left;
+        }
+        #submit {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>/templates/board/registerWithDTO.html</h3>
+    <hr>
+
+    <div>
+        <h3>Register with DTO</h3>
+
+        <form th:action="@{ registerWithDTO }" th:method="POST">
+            <input type="hidden" th:name="currPage" th:value="${param.currPage == '' ? 1 : param.currPage}">
+
+            <table>
+                <tr>
+                    <th th:text="Title">
+                    <td><input type="text" size="78" th:name="title" placeholder="Title" required></td>
+                </tr>
+                <tr>
+                    <th th:text="Writer">
+                    <td>
+                        <select th:name="writer" required>
+                            <option value="" selected>- Select -</option>
+                            <option value="Yoseph">1. Yoseph</option>
+                            <option value="Trinity">2. Trinity</option>
+                            <option value="Pyramid">3. Pyramid</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th th:text="Content">
+                    <td><textarea rows="15" cols="80" th:name="content" placeholder="Please input content ..."></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="submit">
+                        <input type="submit" th:value="register">
+                        <input type="reset" th:value="cancel">
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <br>
+
+        <a th:href="@{ getBoardList ( currPage=${param.currPage == '' ? 1 : param.currPage} ) }" th:text="${'Back To List'}"></a>
+    </div>
+
+</body>
+
+</html>

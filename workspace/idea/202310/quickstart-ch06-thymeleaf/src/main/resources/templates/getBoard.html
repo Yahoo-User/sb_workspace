@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>getBoard</title>
+
+    <style>
+        table {
+            width: 500px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid darkcyan;
+        }
+        td {
+            padding: 5px;
+        }
+        tr > td:first-of-type {
+            width: 100px;
+            
+            text-align: center;
+            font-weight: bold;
+            background-color: orange;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>/templates/getBoard.html</h3>
+    <hr>
+
+    <div th:align="center">
+        <h3>DETAIL</h3>
+
+        <form th:action="updateBoard" method="POST">
+            <input type="hidden" name="seq" th:value="${board.seq}">
+
+            <table>
+                <tr>
+                    <td th:text="TITLE"></td>
+                    <td><input type="text" name="title" th:value="${board.title}" required></td>
+                </tr>
+                <tr>
+                    <td th:text="WRITER"></td>
+                    <td th:text="${board.writer}"></td>
+                </tr>
+                <tr>
+                    <td th:text="CONTENT"></td>
+                    <td><textarea name="content" cols="50" rows="10" th:text="${board.content}" required></textarea></td>
+                </tr>
+                <tr>
+                    <td th:text="CREATE_DATE"></td>
+                    <td th:text="${board.createDate}"></td>
+                </tr>
+                <tr>
+                    <td th:text="CNT"></td>
+                    <td th:text="${board.cnt}"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="UPDATE"></td>
+                </tr>
+            </table>
+        </form>
+
+        <br>
+
+        <a th:href="@{ insertBoard }" th:text="REGISTER"></a>&nbsp;&nbsp;&nbsp;
+
+        <a th:if="${session['member'].role == 'ROLE_ADMIN'}"
+                th:href="@{ deleteBoard(seq=${board.seq}) }"
+                th:text="REMOVE"></a>&nbsp;&nbsp;&nbsp;
+        
+        <a th:href="@{ getBoardList }" th:text="LIST"></a>
+    </div>
+
+</body>
+
+</html>

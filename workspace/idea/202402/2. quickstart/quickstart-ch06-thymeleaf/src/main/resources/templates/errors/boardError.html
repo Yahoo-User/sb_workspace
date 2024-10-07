@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>boardError Handler</title>
+</head>
+
+<body>
+    <h3>/templates/errors/boardError.html</h3>
+    <hr>
+
+    <h3 th:style="${'color: red;'}">
+        BoardException 발생!<br>
+        <a th:href="@{/}" th:text="메인화면으로..."></a>
+    </h3>
+
+    <table>
+        <tr>
+            <th th:style="${'color: green;'}" th:align="left">예외메시지: [[${exception.message}]]</th>
+        </tr>
+
+        <tr th:each="trace : ${exception.stackTrace}">
+            <td th:text="${'&nbsp;&nbsp;&nbsp;&nbsp;at ' + trace}"></td>
+        </tr>
+    </table>
+</body>
+
+</html>

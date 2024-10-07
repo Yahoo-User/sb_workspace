@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login.html</title>
+</head>
+<body th:align="left">
+    <h1>/templates/login.html</h1>
+
+    <hr>
+
+    <!-- <code th:text="${member.getClass().getName()}"></code> -->
+
+    <form method="post" th:action="login">
+        <table th:align="left" th:border="1" th:cellpadding="0" th:cellspacing="0">
+
+            <tr>
+                <td th:bgcolor="orange" th:text='${"Login ID"}'></td>
+                <td><input type="text" name="id" size="10"></td>
+            </tr>
+
+            <tr>
+                <td th:bgcolor="orange" th:text="${'Password'}"></td>
+                <td><input type="password" name="pw" size="10"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" th:align="center">
+                    <input type="submit" value="Sing in">
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+
+</body>
+</html>

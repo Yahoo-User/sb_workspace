@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>Board Detail</title>
+
+    <style>
+        div {
+            width: 700px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            text-align: center;
+        }
+        table td {
+            width: 80%;
+            height: 25px;
+            padding-left: 10px;
+
+            text-align: left;
+        }
+        #submit {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>/templates/board/getBoard.html</h3>
+    <hr>
+
+    <div>
+        <h3>Board Detail</h3>
+
+        <form th:action="@{ update }" th:method="POST">
+            <input type="hidden" name="currPage" th:value="${param.currPage == '' ? 1 : param.currPage}">
+
+            <table>
+                <tr>
+                    <th th:text="Seq">
+                    <td><input type="text" name="seq" th:value="${_BOARD_.seq}" readonly></td>
+                </tr>
+                <tr>
+                    <th th:text="CreateDate">
+                    <td th:text="${_BOARD_.createDate}">
+                </tr>
+                <tr>
+                    <th th:text="LastModifiedDate">
+                    <td th:text="${_BOARD_.updateDate}">
+                </tr>
+                <tr>
+                    <th th:text="Cnt">
+                    <td th:text="${_BOARD_.cnt}">
+                </tr>
+                <tr>
+                    <th th:text="Title">
+                    <td><input type="text" size="78" name="title" th:value="${_BOARD_.title}" required></td>
+                </tr>
+                <tr>
+                    <th th:text="Writer">
+                    <td><input type="text" name="writer" th:value="${_BOARD_.writer}" readonly></td>
+                </tr>
+                <tr>
+                    <th th:text="Content">
+                    <td><textarea rows="15" cols="80" name="content" th:text="${_BOARD_.content}"></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="submit">
+                        <input type="submit" th:value="update">
+                        <input type="reset" th:value="cancel">
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <br>
+
+        <div>
+            <a th:href="@{ getBoardList ( currPage = ${param.currPage} ) }">Back To List</a>
+            <a th:if="${session._MEMBER_.role == 'admin'}"
+                th:href="@{ delete ( seq = ${_BOARD_.seq}, currPage = ${param.currPage} ) }">| DELETE</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

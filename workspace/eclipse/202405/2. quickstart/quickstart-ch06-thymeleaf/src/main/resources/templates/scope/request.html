@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Test Request Scope Bean</title>
+</head>
+
+<body>
+	<h3 th:text="${ '/template/scope/request.html' }"></h3>
+	<hr>
+	
+	<ul style="font-size: 16px; font-weight: bold;">
+		<li>Message: [[ ${message} ]]</li>
+		<li>RequestScopeBean: [[ ${requestScopeBean} ]]</li>
+	</ul>
+</body>
+</html>
+

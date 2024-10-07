@@ -1,0 +1,6 @@
+* Github App Registration *
+
+1. App. Name : LoginTest
+2. Client ID : Ov23li2CJUrLlBCxXCps
+3. Client Secret : d9701bca1b59e6964f09b9f1dc45abd9d7d659ca
+4. Callback URL : https://localhost/RedirectionUriFromGithubLogin

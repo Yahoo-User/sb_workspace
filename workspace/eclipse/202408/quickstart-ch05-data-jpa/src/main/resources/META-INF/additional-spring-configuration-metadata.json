@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "user-defined.name",
+    "type": "java.lang.String",
+    "description": "A description for 'user-defined.name'"
+  },
+  {
+    "name": "user-defined.age",
+    "type": "java.lang.String",
+    "description": "A description for 'user-defined.age'"
+  },
+  {
+    "name": "user-defined.prop1",
+    "type": "java.lang.String",
+    "description": "A description for 'user-defined.prop1'"
+  },
+  {
+    "name": "user-defined.my_property",
+    "type": "java.lang.String",
+    "description": "A description for 'user-defined.my_property'"
+  },
+  {
+    "name": "user-defined.prop2",
+    "type": "java.lang.String",
+    "description": "A description for 'user-defined.prop2'"
+  },
+  {
+    "name": "user-defined.prop3",
+    "type": "java.lang.String",
+    "description": "A description for 'user-defined.prop3'"
+  },
+  {
+    "name": "user-defined.prop4",
+    "type": "java.lang.String",
+    "description": "A description for 'user-defined.prop4'"
+  }
+]}

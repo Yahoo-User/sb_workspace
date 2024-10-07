@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  	
+  <modelVersion>4.0.0</modelVersion>
+
+
+<!-- 
+  Default dependency information for projects that inherit from this one.
+  The dependencies in this section are not immediately resolved.
+  Instead, when a POM derived from this one declares a dependency described by a matching groupId and artifactId,
+  the version and other values from this section are used for that dependency if they were not already specified.
+
+  이 항목에서 상속되는, 프로젝트에 대한 기본 의존성 정보(Default dependency information) 입니다.
+  이 섹션의 종속성은 즉시 결정되지 않습니다(not immediately resolved).
+  대신, 이 항목에서 파생된 POM이 나타내는 의존성을 선언할 때, 일치하는 groupId 및 artifactId 을 선언하면,
+  `version` 및 `기타 값`이 아직 지정되지 않은 경우, 이 항목에서 상속되는 `version` 및 `기타 값`이 해당 의존성에 사용됩니다.
+-->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>3.1.4</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+  <groupId>org.zerock</groupId>
+  <artifactId>spring-boot-starter-custom</artifactId>
+  <version>0.0.1</version>
+  
+  <packaging>jar</packaging>
+
+  <name>spring-boot-starter-custom</name>
+  <url>http://maven.apache.org</url>
+
+
+  <properties>
+    <java-version>17</java-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+
+  <dependencies>
+    <!-- For Auto-Configuration -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+    
+    <!-- For @ConfigurationProperties Annotation -->
+    <dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-configuration-processor</artifactId>
+    	<optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <release>${java-version}</release>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+</project>

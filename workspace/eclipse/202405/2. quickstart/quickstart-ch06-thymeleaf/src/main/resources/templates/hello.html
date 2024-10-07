@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Hello</title>
+</head>
+
+<body th:align="left">
+	<h3>/templates/hello.html</h3>
+
+	<h3 th:text="${ greeting }"></h3>
+	<h3 th:text="${ greeting } + ', Really' + 7"></h3>
+	
+	<h3 th:text="${ 'String Literal' }"></h3>
+	<h3 th:text="${ 'String1' + 'String2' }"></h3>
+	<h3 th:text="${ 'String3' } + 'String4' "></h3>
+	
+	<h3 th:text="${ true }"></h3>
+	<h3 th:text="${ false }"></h3>
+	
+	<h3 th:text="${ 100 }"></h3>
+	<h3 th:text="${ 200.0 }"></h3>
+	
+	<h3 th:text="${ 100 + 200 }"></h3>
+	<h3 th:text="${ 100 - 200 }"></h3>
+	<h3 th:text="${ 100 * 200 }"></h3>
+	<h3 th:text="${ 100 / 200 }"></h3>
+	<h3 th:text="${ 100 % 200 == 0 }"></h3>
+	<h3 th:text="${ 100 < 200 }"></h3>
+	
+	<h3 th:text="${ '/path1/path2' }"></h3>
+	<h3 th:text='${ "/path3/path4" }'></h3>
+	
+	<h3>[[ ${ 'Text Content of Tag' } ]]</h3>
+	<h3><i>[[ ${ 'Text Content of Tag' } ]]</i></h3>
+	[[ ${ 'HTML Content of Tag' } ]]
+</body>
+
+</html>

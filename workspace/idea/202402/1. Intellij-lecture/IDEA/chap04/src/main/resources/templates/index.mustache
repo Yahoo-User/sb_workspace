@@ -1,0 +1,47 @@
+<!--static including: {>mustacheFilePathWillBeIncluded: except of .mustache} -->
+{{>layout/header}}
+
+    <h4>/templates/index.mustache</h4>
+    <hr>
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="/posts/save" role="button" class="btn btn-primary">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-horizontal table-bordered">
+        <thead class="thead-strong">
+            <tr>
+                <th>id</th>
+                <th>title</th>
+                <th>author</th>
+                <th>createdDate</th>
+                <th>modifiedDate</th>
+            </tr>
+        </thead>
+
+        <tbody id="tbody">
+            <!--Traverse of List<T> collection bind as name 'posts'-->
+            <!-- {#bindName}} ~ {/bindName}} -->
+
+            {{#posts}}
+                <tr>
+                    <!--{ expression: field of each element in the collection }}-->
+
+                    <td>{{id}}</td>
+                    <td><a href="/posts/update/{{id}}">{{title}}</a></td>
+                    <td>{{author}}</td>
+                    <td>{{createdDate}}</td>
+                    <td>{{modifiedDate}}</td>
+                </tr>
+            {{/posts}}
+
+        </tbody>
+    </table>
+
+<!--static including: {>mustacheFilePathWillBeIncluded: except of .mustache}} -->
+{{>layout/footer}}
+

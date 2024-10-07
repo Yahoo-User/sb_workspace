@@ -1,0 +1,99 @@
+plugins {
+	id 'java'
+
+//	------------------------------------
+//	If you want to package runnable `jar` and `war`, Must be required.(***)
+//	------------------------------------
+	id 'war'
+
+	id 'org.springframework.boot' version '3.1.4'
+	id 'io.spring.dependency-management' version '1.1.3'
+
+//	id 'org.springframework.boot' version '2.7.16'
+//	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+} // plugins
+
+
+group = 'org.zerock'
+version = '0.0.1-SNAPSHOT'
+
+
+java {
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
+} // java
+
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	} // compileOnly
+	testCompileOnly {
+		extendsFrom testAnnotationProcessor
+	} // compileOnly
+} // configurations
+
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+} // repositories
+
+
+dependencies {
+//	====================================================================== //
+//	1. Essentially Fundamental Dependencies for Web
+//	====================================================================== //
+//	`compileOnly` only used for `main` sources.
+//	Whereas, `implementation` also would be useful for `test` sources.
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	annotationProcessor 	'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+
+//	====================================================================== //
+//	2. Spring Data JPA
+//	====================================================================== //
+//	implementation 'org.hibernate:hibernate-entitymanager'
+//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+
+//	====================================================================== //
+//	3. Custom Starter
+//	====================================================================== //
+	implementation 'org.zerock:spring-boot-starter-custom:0.0.1'
+
+
+//	====================================================================== //
+//	4. JDBC Drivers
+//	====================================================================== //
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// ---------------------------------------------
+	// (* Caution *) Do use this Oracle OCI dependency
+	// with `server.tomcat.additional-tld-skip-patterns = *18*, osdt*` property
+	// declared in `application.properties` file.
+	// ---------------------------------------------
+	runtimeOnly('com.oracle.database.jdbc:ojdbc8-production') {
+		exclude group: 'com.oracle.database.ha', 	module: 'simplefan'
+		exclude group: 'com.oracle.database.ha', 	module: 'ons'
+		exclude group: 'com.oracle.database.jdbc', 	module: 'rsi'
+		exclude group: 'com.oracle.database.xml', 	module: 'xdb'
+		exclude group: 'com.oracle.database.xml', 	module: 'xmlparserv2'
+	}
+} // dependencies
+
+
+test {						// 1st. method - OK : == tasks.named('test')
+//tasks.named('test') {		// 2nd. method - OK : == test
+	useJUnitPlatform()		// Execute the `useJUnitPlatform()` method.
+} // When executing gradle task named `test`

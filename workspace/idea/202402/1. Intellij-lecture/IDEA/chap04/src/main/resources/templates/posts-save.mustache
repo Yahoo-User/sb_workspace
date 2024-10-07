@@ -1,0 +1,32 @@
+<!--static including: {>mustacheFilePathWillBeIncluded: except of the file extension}} -->
+{{>layout/header}}
+
+    <h4>/templates/post-save.mustache</h4>
+    <hr>
+
+    <div class="col-md-12">
+        <div class="col-md-4">
+            <form action="">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" class="form-control" placeholder="Please input a title ...">
+                </div>
+
+                <div class="form-group">
+                    <label for="author">Author</label>
+                    <input type="text" name="author" id="author" class="form-control" placeholder="Please input a author ...">
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <input type="text" name="content" id="content" class="form-control" placeholder="Please input a content ...">
+                </div>
+            </form>
+
+            <a href="/" role="button" class="btn btn-primary">Cancel</a>
+            <button type="button" class="btn btn-primary" id="btn-save">Register</button>
+        </div>
+    </div>
+
+<!--static including: {>mustacheFilePathWillBeIncluded: except of the file extension}} -->
+{{>layout/footer}}

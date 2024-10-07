@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Authenticated</title>
+
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>/loginSuccess.html</h2>
+    <hr>
+    
+    <h2>* Authenticated *</h2>
+
+    <h2>
+        <a th:href="@{/}">1. To / Request URI</a><br>
+        <a th:href="@{/member}">2. To /member Request URI</a><br>
+        <a th:href="@{/manager}">3. To /manager Request URI</a><br>
+        <a th:href="@{/admin}">4. To /admin Request URI</a>
+    </h2>
+
+    <form method="post" action="/logout">
+        <input type="submit" value="Sign-Out">
+    </form>
+</body>
+
+</html>

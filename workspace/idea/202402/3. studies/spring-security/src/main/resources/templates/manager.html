@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th = "https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>manager</title>
+</head>
+
+<body>
+    <h3>/manager.html</h3>
+    <hr>
+
+    <a th:href="@{/loginSuccess}">Go Back</a>
+
+    <hr>
+
+    <form action="logout" method="get">
+        <input type="submit" value="Logout">
+    </form>
+</body>
+</html>

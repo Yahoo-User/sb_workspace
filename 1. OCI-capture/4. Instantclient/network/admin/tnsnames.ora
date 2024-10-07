@@ -1,0 +1,12 @@
+atp20191201_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-seoul-1.oraclecloud.com))(connect_data=(service_name=rsdhl7hwgvf4zh4_atp20191201_high.atp.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+atp20191201_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-seoul-1.oraclecloud.com))(connect_data=(service_name=rsdhl7hwgvf4zh4_atp20191201_low.atp.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+atp20191201_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-seoul-1.oraclecloud.com))(connect_data=(service_name=rsdhl7hwgvf4zh4_atp20191201_medium.atp.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+atp20191201_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-seoul-1.oraclecloud.com))(connect_data=(service_name=rsdhl7hwgvf4zh4_atp20191201_tp.atp.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+atp20191201_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-seoul-1.oraclecloud.com))(connect_data=(service_name=rsdhl7hwgvf4zh4_atp20191201_tpurgent.atp.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+

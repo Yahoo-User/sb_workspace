@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>accessDenied</title>
+</head>
+<body>
+	<h3>/templates/security/accessDenied.html</h3>
+	<hr>
+	
+	<p style='color: blue; font-size: 16px;'>[[ ${SPRING_SECURITY_403_EXCEPTION} ]]</p>
+	
+	<ol style='font-size: 16px; color: red;'>
+		<li th:each="stack : ${SPRING_SECURITY_403_EXCEPTION.stackTrace}" th:text="${'at ' + stack}">
+	</ol>
+
+</body>
+</html>
+

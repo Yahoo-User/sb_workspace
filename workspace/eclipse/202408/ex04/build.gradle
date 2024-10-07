@@ -1,0 +1,66 @@
+plugins {
+	id 'java'
+	id 'war'
+	
+	id 'eclipse-wtp'
+	
+	id 'org.springframework.boot' version '3.2.6'
+	id 'io.spring.dependency-management' version '1.1.4'
+}	// plugins
+
+eclipse {
+    wtp {
+        facet {
+            facet name: 'jst.web', version: '6.0' 
+            facet name: 'jst.java', version: '17' 
+        }
+        component {
+            contextPath = '/'
+        }
+    }
+}
+
+group = 'org.zerock'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}	// java
+
+configurations {
+	implementation
+	testImplementation
+	annotationProcessor
+	testAnnotationProcessor
+	developmentOnly
+	providedRuntime
+	
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	testCompileOnly {
+		extendsFrom testAnnotationProcessor
+	}
+}	// configurations
+
+repositories {
+	mavenCentral()
+}	// repositories
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+}	// dependencies
+
+//test {
+tasks.named('test') {
+	useJUnitPlatform()
+}	// test

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>insertBoard</title>
+
+    <style>
+        table {
+            width: 500px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid darkcyan;
+        }
+        td {
+            padding: 5px;
+        }
+        tr > td:first-of-type {
+            width: 100px;
+            
+            text-align: center;
+            font-weight: bold;
+            background-color: orange;
+        }
+        tr > td:last-of-type {
+            padding: 5px;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>/templates/insertBoard.html</h3>
+    <hr>
+
+    <div th:align="center">
+
+        <h3>REGISTER</h3>
+
+        <form th:action="insertBoard" method="POST">
+
+            <table>
+                <tr>
+                    <td th:text="TITLE"></td>
+                    <td><input type="text" name="title" required></td>
+                </tr>
+
+                <tr>
+                    <td th:text="WRITER"></td>
+                    <td><input type="text" name="writer" maxlength="10" required></td>
+                </tr>
+
+                <tr>
+                    <td th:text="CONTENT"></td>
+                    <td><textarea name="content" cols="50" rows="10" required></textarea></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" thstyle="${ 'padding: 5px;' }"><input type="submit" th:value="Register" required></td>
+                </tr>
+            </table>
+
+        </form>
+
+        <br>
+
+        <a th:href="@{ getBoardList }" th:text="LIST"></a>
+    </div>
+</body>
+
+</html>

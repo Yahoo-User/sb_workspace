@@ -1,0 +1,219 @@
+********************************************************************************
+gradle tasks
+********************************************************************************
+
+1. To list all tasks
+
+	> gradlew tasks  <------ ***
+
+
+	C:\app\2023\eclipse\workspace\jee-2023-06\boot_1> gradlew tasks
+
+	> Task :tasks
+
+	------------------------------------------------------------
+	Tasks runnable from root project 'boot_1'
+	------------------------------------------------------------
+
+	-----------------
+	Application tasks
+	-----------------
+	(01) bootRun - Runs this project as a Spring Boot application.
+	(02) bootTestRun - Runs this project as a Spring Boot application using the test runtime classpath.
+
+	-----------------
+	Build tasks
+	-----------------
+	(01) assemble - Assembles the outputs of this project.
+	(02) bootBuildImage - Builds an OCI image of the application using the output of the bootJar task
+	(03) bootJar - Assembles an executable jar archive containing the main classes and their dependencies.
+	(04) build - Assembles and tests this project.
+	(05) buildDependents - Assembles and tests this project and all projects that depend on it.
+	(06) buildNeeded - Assembles and tests this project and all projects it depends on.
+	(07) classes - Assembles main classes.
+	(08) clean - Deletes the build directory.
+	(09) jar - Assembles a jar archive containing the classes of the 'main' feature.
+	(10) resolveMainClassName - Resolves the name of the application's main class.
+	(11) resolveTestMainClassName - Resolves the name of the application's test main class.
+	(12) testClasses - Assembles test classes.
+
+	-----------------
+	Build Setup tasks
+	-----------------
+	(01) init - Initializes a new Gradle build.
+	(02) wrapper - Generates Gradle wrapper files.
+
+	-----------------
+	Documentation tasks
+	-------------------
+	(01) javadoc - Generates Javadoc API documentation for the 'main' feature.
+
+	-----------------
+	Help tasks
+	-----------------
+	(01) buildEnvironment - Displays all buildscript dependencies declared in root project 'boot_1'.
+	(02) dependencies - Displays all dependencies declared in root project 'boot_1'.
+	(03) dependencyInsight - Displays the insight into a specific dependency in root project 'boot_1'.
+	(04) dependencyManagement - Displays the dependency management declared in root project 'boot_1'.
+	(05) help - Displays a help message.
+	(06) javaToolchains - Displays the detected java toolchains.
+	(07) outgoingVariants - Displays the outgoing variants of root project 'boot_1'.
+	(08) projects - Displays the sub-projects of root project 'boot_1'.
+	(09) properties - Displays the properties of root project 'boot_1'.
+	(10) resolvableConfigurations - Displays the configurations that can be resolved in root project 'boot_1'.
+	(11) tasks - Displays the tasks runnable from root project 'boot_1'.
+
+	-----------------
+	Verification tasks
+	-----------------
+	(01) check - Runs all checks.
+	(02) test - Runs the test suite.
+
+	-----------------
+	Rules
+	-----------------
+	(01) Pattern: clean<TaskName>: Cleans the output files of a task.
+	(02) Pattern: build<ConfigurationName>: Assembles the artifacts of a configuration.
+
+	To see all tasks and more detail, run gradlew tasks --all
+										  ============================== ****
+
+	To see more detail about a task, run gradlew help --task <task>
+										 ============================== ****
+
+	BUILD SUCCESSFUL in 1s
+	1 actionable task: 1 executed
+
+
+	> gradlew tasks --all  <------ ***
+
+	C:\app\2023\eclipse\workspace\jee-2023-06\boot_1> gradlew tasks --all
+
+	> Task :tasks
+
+	------------------------------------------------------------
+	Tasks runnable from root project 'boot_1'
+	------------------------------------------------------------
+
+	-----------------
+	Application tasks
+	-----------------
+	(01) bootRun - Runs this project as a Spring Boot application.
+	(02) bootTestRun - Runs this project as a Spring Boot application using the test runtime classpath.
+
+	-----------------
+	Build tasks
+	-----------------
+	(01) assemble - Assembles the outputs of this project.
+	(02) bootBuildImage - Builds an OCI image of the application using the output of the bootJar task
+	(03) bootJar - Assembles an executable jar archive containing the main classes and their dependencies.
+	(04) build - Assembles and tests this project.
+	(05) buildDependents - Assembles and tests this project and all projects that depend on it.
+	(06) buildNeeded - Assembles and tests this project and all projects it depends on.
+	(07) classes - Assembles main classes.
+	(08) clean - Deletes the build directory.
+	(09) jar - Assembles a jar archive containing the classes of the 'main' feature.
+	(10) resolveMainClassName - Resolves the name of the application's main class.
+	(11) resolveTestMainClassName - Resolves the name of the application's test main class.
+	(12) testClasses - Assembles test classes.
+
+	-----------------
+	Build Setup tasks
+	-----------------
+	(01) init - Initializes a new Gradle build.
+	(02) wrapper - Generates Gradle wrapper files.
+
+	-----------------
+	Documentation tasks
+	-----------------
+	(01) javadoc - Generates Javadoc API documentation for the 'main' feature.
+
+	-----------------
+	Help tasks
+	-----------------
+	(01) buildEnvironment - Displays all buildscript dependencies declared in root project 'boot_1'.
+	(02) dependencies - Displays all dependencies declared in root project 'boot_1'.
+	(03) dependencyInsight - Displays the insight into a specific dependency in root project 'boot_1'.
+	(04) dependencyManagement - Displays the dependency management declared in root project 'boot_1'.
+	(05) help - Displays a help message.
+	(06) javaToolchains - Displays the detected java toolchains.
+	(07) outgoingVariants - Displays the outgoing variants of root project 'boot_1'.
+	(08) projects - Displays the sub-projects of root project 'boot_1'.
+	(09) properties - Displays the properties of root project 'boot_1'.
+	(10) resolvableConfigurations - Displays the configurations that can be resolved in root project 'boot_1'.
+	(11) tasks - Displays the tasks runnable from root project 'boot_1'.
+
+	-----------------
+	Verification tasks
+	-----------------
+	(01) check - Runs all checks.
+	(02) test - Runs the test suite.
+
+	-----------------
+	Other tasks
+	-----------------
+	(01) compileJava - Compiles main Java source.
+	(02) compileTestJava - Compiles test Java source.
+	(03) components - Displays the components produced by root project 'boot_1'. [deprecated]
+	(04) dependentComponents - Displays the dependent components of components in root project 'boot_1'. [deprecated]
+	(05) model - Displays the configuration model of root project 'boot_1'. [deprecated]
+	(06) prepareKotlinBuildScriptModel
+	(07) processResources - Processes main resources.
+	(08) processTestResources - Processes test resources.
+
+	-----------------
+	Rules
+	-----------------
+	(01) Pattern: clean<TaskName>: Cleans the output files of a task.
+	(02) Pattern: build<ConfigurationName>: Assembles the artifacts of a configuration.
+
+	BUILD SUCCESSFUL in 1s
+	1 actionable task: 1 executed
+
+
+2. To create a Spring Boot Runnable Jar
+
+
+	> gradlew clean
+	> gradlew bootJar
+
+	OR
+
+	> gradlew clean bootJar
+
+
+	-------------------------
+
+	> cd build
+	> cd libs
+	> dir
+
+	 C:\app\2023\eclipse\workspace\jee-2023-06\boot_1\build\libs 디렉터리
+
+	2023-07-31  오후 04:54    <DIR>          .
+	2023-07-31  오후 04:54    <DIR>          ..
+	2023-07-31  오후 04:54        23,410,819 boot_1-0.0.1-SNAPSHOT.jar
+
+
+	> java -jar boot_1-0.0.1-SNAPSHOT.jar 		<---- *** : Spring Boot Start-Up
+
+
+
+3. To run Spring Boot Runnable Jar with the specified embeded tomcat listen port
+
+	> java -jar boot_1-0.0.1-SNAPSHOT.jar --server.port=8888		<---- *** : Spring Boot Start-Up with listen port 8888
+
+
+
+4. To run Spring Boot Runnable Jar with the specified listen port and `debug` logging level
+
+	> java -jar boot_1-0.0.1-SNAPSHOT.jar --server.port=8888 --logging.level.web=debug		<---- ***
+
+
+
+5. 
+
+
+
+
+

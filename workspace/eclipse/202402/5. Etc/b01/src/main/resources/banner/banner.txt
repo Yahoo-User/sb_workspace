@@ -1,0 +1,7 @@
+
+******************************************
+My Spring Boot Application
+version${spring-boot.formatted-version}
+******************************************
+
+Yoseph.

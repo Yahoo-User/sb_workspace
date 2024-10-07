@@ -1,0 +1,245 @@
+************************************************************************************
+JPA Informations - 2023.10.08
+************************************************************************************
+
+
+01. Conditions for the * Entity * Java Class
+
+	==============================================================
+	* Notes About the Entity
+	==============================================================
+
+	- This class uses `standard JavaBean naming conventions` for property `getter` and `setter` methods, 
+	  as well as `private` visibility for the `fields`. (***)
+	  Although this is the recommended design, it is *NOT* required.
+
+	- The no-argument constructor, which is also a JavaBean convention, is a requirement for all persistent classes. (***)
+
+	- Hibernate needs to create objects for you, using `Java Reflection`.
+	  The constructor can be private. However, `package` or `public` visibility is required for runtime `proxy` generation
+	  and efficient `data retrieval` without bytecode instrumentation. (***)
+
+	- It is *NOT* required for the `id` element to map to the table’s actual `primary key` column(s), but it is the normal convention. (***)
+
+	  Tables mapped in Hibernate do not even need to define primary keys.
+	  However, it is strongly recommend that all schemas define proper referential integrity. (***)
+	  Therefore, `id` and `primary key` are used interchangeably throughout Hibernate documentation.
+
+
+02. The * Annotated Entity * Java Class
+
+	==============================================================
+	* Identifying the Class as an `Entity`
+	==============================================================
+
+	- In fact, the Class Itself is identical to the one in the `Entity` Java class, 
+	  except that annotations are used to provide the metadata, rather than a separate mapping file.
+
+	  Example:
+
+	  	@Entity
+		@Table( name = "EVENTS" )
+		public class Event {
+		    ...
+		}
+
+	- The `@javax.persistence.Entity` annotation is used to mark a class as an `entity`. (***)
+	- Additionally, the `@javax.persistence.Table` annotation explicitly specifies the `table name`. (***)
+	  Without this specification, the `default` table name would be `EVENT` in the above example.
+
+
+	==============================================================
+	* Identifying the `Identifier` Property
+	==============================================================
+
+	- Example:
+
+	  	@Id
+		@GeneratedValue(generator="increment")
+		@GenericGenerator(name="increment", strategy = "increment")
+		public Long getId() {
+		    return id;
+		}
+
+	- `@javax.persistence.Id` marks the property which defines the `entity’s identifier`. (***)
+	- `@javax.persistence.GeneratedValue` and `@org.hibernate.annotations.GenericGenerator` work in tandem
+	  to indicate that Hibernate should use `Hibernate’s increment generation strategy` for this `entity’s identifier values`. (***)
+
+
+	==============================================================
+	* Identifying Basic Properties
+	==============================================================
+
+	- Example:
+
+	  	public String getTitle() {
+		    return title;
+		}
+
+		@Temporal(TemporalType.TIMESTAMP)
+		@Column(name = "EVENT_DATE")
+		public Date getDate() {
+		    return date;
+		}
+
+	- The `date` property needs special handling to account for its special `naming` and its `SQL type`.
+
+	- `Attributes` of an Entity are considered * Persistent * `by default` (***)
+	  When mapping with annotations, which is why we don’t see any mapping information associated with `title`.
+
+
+03. Tutorial Using the Java Persistence API (JPA)
+
+	==============================================================
+	03-1. persistence.xml
+	==============================================================
+
+		- JPA defines a bootstrap process that uses its own configuration file named `persistence.xml`. (***)
+
+		- This bootstrapping process is defined by the JPA specification.
+
+		- In Java™ SE environments, the `Persistence Provider` (Hibernate in this case) is required to locate all JPA configuration files
+		  by `classpath lookup` of the `META-INF/persistence.xml` resource name. (***)
+
+		- Example :
+
+			<persistence 
+				xmlns="http://java.sun.com/xml/ns/persistence"
+			  	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+				version="2.0">
+
+			    <persistence-unit name="org.hibernate.tutorial.jpa">
+			        ...
+			    </persistence-unit>
+
+			</persistence>
+
+		- `persistence.xml` files should provide a `unique name` for each "persistence unit". (***)
+		- Applications use `this name` to reference the configuration when obtaining an `javax.persistence.EntityManagerFactory` reference. (***)
+
+
+	==============================================================
+	03-2. Obtaining the `javax.persistence.EntityManagerFactory` (***)
+	==============================================================
+
+		- Type Hierarchies:
+
+			<C> SessionFactoryImpl (***)
+					implements  <I> SessionFactoryImplementor 
+										extends <I> org.hibernate.SessionFactory (***)
+														extends <I> Closeable (***)
+														extends <I> javax.persistence.EntityManagerFactory (***)
+		- Example :
+
+			protected void setUp() throws Exception {
+				// Persistence.createEntityManagerFactory( <persistence-unit name= * "H2" *> in the `persistence.xml` file )
+
+		        // Returns `org.hibernate.internal.SessionFactoryImpl`
+		        @Cleanup    // *NOT* AutoCloseable, But Resource.
+		        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("H2");
+
+			}
+
+		- Notice again that the persistence unit name is `H2`, which matches `persistence.xml`. (***)
+
+
+	==============================================================
+	03-3. Obtaining the `org.hibernate.SessionFactory` (***)
+	==============================================================
+
+		- Type Hierarchies:
+
+			<C> SessionFactoryImpl (***)
+					implements  <I> SessionFactoryImplementor 
+										extends <I> SessionFactory (***)
+														extends <I> Closeable (***)
+														extends <I> javax.persistence.EntityManagerFactory (***)
+
+		- Example :
+
+			protected void setUp() throws Exception {
+				// Persistence.createEntityManagerFactory( <persistence-unit name= * "H2" *> in the `persistence.xml` file )
+
+		        // Returns `org.hibernate.internal.SessionFactoryImpl`
+		        SessionFactory sessionFactory = (SessionFactory) Persistence.createEntityManagerFactory("H2");
+
+		        try (sessionFactory) {  // AutoCloseable (***)
+		            assertNotNull(sessionFactory);
+		            log.info("\t+ sessionFactory: {}", sessionFactory);
+		        } // try-with-resources
+			}
+
+		- Notice again that the persistence unit name is `H2`, which matches `persistence.xml`. (***)
+
+
+	==============================================================
+	03-4. Saving Entities (***)
+	==============================================================
+
+		- Type Hierarchies:
+
+			<C> org.hibernate.Session (***)
+						extends <I> javax.persistence.EntityManager, <I> AutoCloseable
+
+			<I> org.hibernate.Transaction (***)
+						extends <I> javax.persistence.EntityTransaction (***)
+
+		- The final step in the bootstrap process is to build the `SessionFactory`. (***)
+
+		- The `SessionFactory` is a `Thread-Safe` object that is instantiated * ONCE * to serve the `entire` application. (***)
+
+		- The `SessionFactory` acts as a factory for `org.hibernate.Session` instances,
+		  which should be thought of as a corollary to a "unit of work". (***)
+
+		- Example :
+
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+
+			session.save( new Entity( "Our very first event!", new Date() ) );
+			session.save( new Entity( "A follow up event", new Date() ) );
+
+			session.getTransaction().commit();
+			session.close();
+
+
+			* First creates some new `Entity` objects and hands them over to `Hibernate` for management, using the `save()` method. (***)
+			* `Hibernate` now takes responsibility to perform an `INSERT` on the database for `each` Entity. (***)
+
+
+	==============================================================
+	03-5. Updating Entities (***)
+	==============================================================
+
+		- Type Hierarchies:
+
+			<C> org.hibernate.Session (***)
+						extends <I> javax.persistence.EntityManager, <I> AutoCloseable
+
+			<I> org.hibernate.Transaction (***)
+						extends <I> javax.persistence.EntityTransaction (***)
+
+		- Caution1 (* Very Important *):
+			Without `transaction`, All found entities are *NOT* in the `persistence context`. (***)
+			So Updating found entity is *NOT* useless to be applied to the repository. (***)
+
+		- Example :
+
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+
+			List result = session.createQuery( "from Event" ).list();
+			for ( Event event : (List<Event>) result ) {
+			    System.out.println( "Event (" + event.getDate() + ") : " + event.getTitle() );
+			}
+
+			session.getTransaction().commit();
+			session.close();
+
+		- Here we see an example of the `Hibernate Query Language (HQL)` to load all existing Entity objects
+		  from the database by generating the appropriate `SELECT SQL`, sending it to the database
+		  and populating Entity objects with the result set data.
+
+
+4. 

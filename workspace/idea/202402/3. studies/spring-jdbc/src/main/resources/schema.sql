@@ -1,0 +1,11 @@
+DROP TABLE message;
+
+CREATE TABLE message (
+    id INTEGER GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_message PRIMARY KEY,
+    text VARCHAR2(1000)
+);
+
+INSERT INTO message (text)
+SELECT 'TEXT_' || level
+FROM dual
+CONNECT BY level <= 30;

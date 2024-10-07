@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>accessDenied.html</title>
+
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>/templates/accessDenied.html</h1>
+    
+    <hr>
+
+    <h3>Welcome ^^, You are <strong>NOT</strong> authorized</h3>
+    
+    <ol>
+        <li><a th:href="@{/}">Index</a></li>
+        <li><a th:href="@{/member}">Member</a></li>
+        <li><a th:href="@{/manager}">Manager</a></li>
+        <li><a th:href="@{/admin}">Admin</a></li>
+        <li><a th:href="@{/login}">Sign-in</a></li>
+    </ol>
+</body>
+</html>

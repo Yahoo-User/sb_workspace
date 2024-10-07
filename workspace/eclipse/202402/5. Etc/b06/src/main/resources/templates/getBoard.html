@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html 
+    lang="ko"
+    xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>getBoard.html</title>
+    </head>
+    <body th:align="left">
+
+        <h1>/templates/getBoard.html</h1>
+
+        <hr>
+
+        <a th:href="@{/getBoardList}" th:text='${"link"}'></a>
+        <p th:text="${board.seq}"></p>
+        <p th:text="${board.title}"></p>
+        <p th:text="${board.content}"></p>
+        <p th:text="${board.writer}"></p>
+        <p th:text="${board.cnt}"></p>
+        <p th:text="${board.createDate}"></p>
+        <p th:text="${board.updateDate}"></p>
+
+    </body>
+</html>

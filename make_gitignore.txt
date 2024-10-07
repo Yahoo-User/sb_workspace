@@ -1,0 +1,3 @@
+gitignore eclipse,jetbrains,git,java,windows,maven,gradle  > .gitignore
+echo .backup/ >> .gitignore
+echo backup/ >> .gitignore

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th = "https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+
+<body>
+    <h3>/login.html</h3>
+    <hr>
+
+    <form method="post">
+        <table th:align="center" th:cellpadding="0" th:cellspacing="0">
+            <tr>
+                <td bgcolor="orange">username</td>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <td bgcolor="orange">password</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td colspan="2" th:align="center">
+                    <input type="submit" value="Login">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</body>
+</html>

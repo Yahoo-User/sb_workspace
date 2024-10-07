@@ -1,0 +1,69 @@
+plugins {
+	id 'java'
+
+//	------------------------------------
+//	If you want to package runnable `jar` and `war`, Must be required.(***)
+//	------------------------------------
+	id 'war'
+
+	id 'org.springframework.boot' version '3.1.4'
+	id 'io.spring.dependency-management' version '1.1.3'
+
+//	id 'org.springframework.boot' version '2.7.15'
+//	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+} // plugins
+
+
+group = 'org.zerock'
+version = '0.0.1-SNAPSHOT'
+
+
+java {
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
+} // java
+
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	} // compileOnly
+	testCompileOnly {
+		extendsFrom testAnnotationProcessor
+	} // compileOnly
+} // configurations
+
+
+repositories {
+	mavenCentral()
+} // repositories
+
+
+dependencies {
+//	====================================================================== //
+//	1. Essentially Fundamental Dependencies for Web
+//	====================================================================== //
+//	`compileOnly` only used for `main` sources.
+//	Whereas, `implementation` also would be useful for `test` sources.
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//	DevTools
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+//	Actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+//	Lombok
+	annotationProcessor 	'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+} // dependencies
+
+
+test {						// 1st. method - OK : == tasks.named('test')
+//tasks.named('test') {		// 2nd. method - OK : == test
+	useJUnitPlatform()		// Execute the `useJUnitPlatform()` method.
+} // When executing gradle task named `test`

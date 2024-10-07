@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>accessDenied</title>
+</head>
+
+<body>
+    <h2>/accessDenied.html</h2>
+    <hr>
+
+    <h2>Sorry! You don't have authority to access the request URI.</h2>
+
+    <h3>1. <a th:href="@{/loginSuccess}">Go Back</a></h3>
+    <h3>2. To re-login, Click <a th:href="@{/login}">Here</a></h3>
+</body>
+
+</html>

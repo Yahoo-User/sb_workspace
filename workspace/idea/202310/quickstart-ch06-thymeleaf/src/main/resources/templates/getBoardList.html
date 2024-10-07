@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th = "http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board List</title>
+
+    <style>
+        table {
+            width: 800px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid darkcyan;
+        }
+        tr > th {
+            width: 200px;
+            
+            text-align: center;
+            background-color: orange;
+        }
+        tr > td {
+            text-align: center;
+        }
+        tr > td:nth-of-type(2) {    /* title */
+            width: 600px;
+            text-align: left;
+            padding-left: 10px;
+        }
+        a {
+            text-decoration: none;
+        }
+        span {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>/templates/getBoardList.html</h3>
+    <hr>
+
+    <div th:align="center">
+        <h3>Board List</h3>
+
+        <h3><span th:text="${ session['member'].name }"></span>님 게시판 입장을 환영합니다.</h3>
+        
+        <table th:align="center">
+            <tr>
+                <th>SEQ</th>
+                <th>TITLE</th>
+                <th>WRITER</th>
+                <th>CREATE_DATE</th>
+                <th>CNT</th>
+            </tr>
+
+            <tr th:each="board : ${boardList}">
+                <td th:text="${board.seq}"></td>
+                <td><a th:text="${board.title}" th:href="@{getBoard(seq=${board.seq})}"></a></td>
+                <td th:text="${board.writer}"></td>
+                <td th:text="${ #dates.format(board.createDate, 'yyyy/MM/dd HH:mm:ss.SSS') }" th:style="${ 'width: 400px; font-style: bold;' }"></td>
+                <td th:text="${board.cnt}"></td>
+            </tr>
+        </table>
+
+        <br>
+
+        <a th:href="@{insertBoard}" th:text="REGISTER"></a>&nbsp;&nbsp;&nbsp;
+        <a th:href="@{logout}" th:text="LOGOUT"></a>
+    </div>
+</body>
+
+</html>

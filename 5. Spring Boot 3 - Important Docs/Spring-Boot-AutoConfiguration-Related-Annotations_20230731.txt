@@ -1,0 +1,1663 @@
+********************************************************************************
+01. @AutoConfiguration(after = DataSourceAutoConfiguration.class)
+********************************************************************************
+
+    org.springframework.boot.autoconfigure
+
+	=============================================================
+	@Target({ElementType.TYPE})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Configuration(proxyBeanMethods = false)
+
+	@AutoConfigureBefore
+	@AutoConfigureAfter
+
+	public @interface AutoConfiguration	extends java.lang.annotation.Annotation
+
+	=============================================================
+	Indicates that a class provides configuration that can be automatically applied by Spring Boot.
+
+	Auto-configuration classes are regular `@Configuration` with the exception
+	that `Configuration#proxyBeanMethods()` proxyBeanMethods is always false.
+
+	They are located using `ImportCandidates`.
+
+	Generally auto-configuration classes are marked as `@Conditional`
+	(most often using `@ConditionalOnClass` and `@ConditionalOnMissingBean` annotations).
+
+	-------------------------------------------------------------
+	클래스가 Spring Boot에서 자동으로 적용할 수 있는 구성을 제공함을 나타냅니다.
+
+	자동-구성 클래스는 예외를 제외하고, 일반 `@Configuration`입니다.
+	`Configuration#proxyBeanMethods()` proxyBeanMethods는 항상 거짓입니다.
+
+	그들은 `ImportCandidates`를 사용하여 찾습니다.
+
+	일반적으로 자동-구성 클래스는 `@Conditional`로 표시됩니다.
+	(대부분 `@ConditionalOnClass` 및 `@ConditionalOnMissingBean` 주석 사용).
+
+	=============================================================
+	Since: 2.7.0
+	See Also: EnableAutoConfiguration,
+			  AutoConfigureBefore,
+			  AutoConfigureAfter,
+			  Conditional,
+			  ConditionalOnClass,
+			  ConditionalOnMissingBean
+	Author: Moritz Halbritter
+
+	=============================================================
+  	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+  			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+
+********************************************************************************
+02. @ConditionalOnClass({ DataSource.class, JdbcTemplate.class })
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE, ElementType.METHOD}) 
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional({org.springframework.boot.autoconfigure.condition.OnClassCondition.class})
+	
+	public @interface ConditionalOnClass extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when the specified classes are on the classpath.
+
+	A Class value can be safely specified on `@Configuration` classes as the annotation metadata is parsed 
+	by using ASM before the class is loaded.
+
+	If a class reference cannot be used then a name String attribute can be used.
+
+	Note: Extra care must be taken when using `@ConditionalOnClass` on `@Bean` methods
+		  where typically the return type is the target of the condition.
+
+	Before the condition on the method applies,
+	the JVM will have loaded the class and potentially processed method references which will fail if the class is not present.
+
+	To handle this scenario, a separate `@Configuration` class should be used to isolate the condition.
+
+	For example:
+
+	  @AutoConfiguration
+	  public class MyAutoConfiguration {
+ 
+	  	@Configuration(proxyBeanMethods = false)
+	  	@ConditionalOnClass(SomeService.class)
+	  	public static class SomeServiceConfiguration {
+	 
+	  		@Bean
+	  		@ConditionalOnMissingBean
+	  		public SomeService someService() {
+	  			return new SomeService();
+	  		}
+	 
+	  	}
+	 
+	  }
+
+	-------------------------------------------------------------
+	지정된 클래스가 클래스 경로에 있을 때만 일치하는 `@Conditional`.
+
+	클래스가 로드되기 전에 ASM을 사용하여 주석 메타데이터가 구문분석 됨에 따라,
+	클래스 값을 `@Configuration` 클래스에 안전하게 지정할 수 있습니다.
+
+	클래스 참조를 사용할 수 없는 경우 이름 문자열 특성을 사용할 수 있습니다.
+
+	참고: `@Bean` 메서드에서 `@ConditionalOnClass`를 사용할 때는 각별한 주의가 필요합니다.
+	여기서 일반적으로 반환유형은 조건의 대상입니다.
+
+	방법에 대한 조건이 적용되기 전에, JVM은 클래스를 로드하고 잠재적으로 클래스가 없으면 실패하는 메소드 참조를 처리합니다.
+
+	이 시나리오를 처리하려면 별도의 `@Configuration` 클래스를 사용하여 조건을 격리해야 합니다.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Phillip Webb
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+
+********************************************************************************
+03. @ConditionalOnSingleCandidate(DataSource.class)
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional({org.springframework.boot.autoconfigure.condition.OnBeanCondition.class})
+
+	public @interface ConditionalOnSingleCandidate extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when a bean of the specified class is already contained in the BeanFactory
+	and a single candidate can be determined.
+
+	The condition will also match if multiple matching bean instances are already contained in the BeanFactory
+	but a primary candidate has been defined;
+
+	essentially, the condition match if auto-wiring a bean with the defined type will succeed.
+
+	The condition can only match the bean definitions that have been processed by the application context so far
+	and, as such, it is strongly recommended to use this condition on auto-configuration classes only. 
+
+	If a candidate bean may be created by another auto-configuration, make sure that the one using this condition runs after.
+
+	-------------------------------------------------------------
+	지정된 클래스의 빈이 BeanFactory에 이미 포함되어 있는 경우에만 일치하는 `@Conditional`
+	단일 후보가 결정될 수 있습니다.
+
+	일치하는 여러 bean 인스턴스가 이미 BeanFactory에 포함되어 있으면 조건도 일치합니다.
+	그러나 기본 후보가 정의되었습니다.
+
+	기본적으로 정의된 유형으로 빈을 자동 연결하면 조건이 일치합니다.
+
+	조건은 지금까지 애플리케이션 컨텍스트에 의해 처리된 Bean 정의와만 일치할 수 있습니다.
+	따라서 자동-구성 클래스에서만 이 조건을 사용하는 것이 좋습니다.
+
+	다른 자동-구성에 의해 후보 bean이 생성될 수 있는 경우, 이 조건을 사용하는 bean이 이후에 실행되는지 확인하십시오.
+
+	=============================================================
+	Since: 1.3.0
+	Author: Stephane Nicoll
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+
+********************************************************************************
+04. @EnableConfigurationProperties(JdbcProperties.class)
+********************************************************************************
+
+	org.springframework.boot.context.properties
+
+	=============================================================
+	@Target({ElementType.TYPE})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Import({org.springframework.boot.context.properties.EnableConfigurationPropertiesRegistrar.class})
+
+	public @interface EnableConfigurationProperties extends java.lang.annotation.Annotation
+
+	=============================================================
+	Enable support for `@ConfigurationProperties` annotated beans.
+
+	`@ConfigurationProperties` beans can be registered in the standard way (for example using `@Bean` methods) 
+	or, for convenience, can be specified directly on this annotation.
+
+	-------------------------------------------------------------
+	`@ConfigurationProperties` 주석 빈에 대한 지원을 활성화합니다.
+
+	`@ConfigurationProperties` 빈은 표준방식으로 등록할 수 있습니다 (예: @Bean 메서드 사용).
+	또는 편의상, 이 주석에 직접 지정할 수 있습니다.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Dave Syer
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot:3.1.2
+			(spring-boot-3.1.2.jar)
+
+
+
+********************************************************************************
+05. @Import({ 
+				DatabaseInitializationDependencyConfigurer.class,
+				JdbcTemplateConfiguration.class,
+				NamedParameterJdbcTemplateConfiguration.class
+		   })
+********************************************************************************
+
+	org.springframework.context.annotation
+
+	=============================================================
+	@Target({ElementType.TYPE})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	public @interface Import extends java.lang.annotation.Annotation
+
+	=============================================================
+	Indicates one or more component classes to import - typically `@Configuration` classes.
+	Provides functionality equivalent to the <import/> element in Spring XML.
+
+	Allows for importing `@Configuration` classes, ImportSelector and ImportBeanDefinitionRegistrar implementations,
+	as well as regular component classes (as of 4.2; analogous to AnnotationConfigApplicationContext.register).
+
+	`@Bean` definitions declared in imported `@Configuration` classes should be accessed by using `@Autowired` injection.
+	Either the bean itself can be autowired, or the configuration class instance declaring the bean can be autowired.
+
+	The latter approach allows for explicit, IDE-friendly navigation between `@Configuration` class methods.
+	May be declared at the class level or as a meta-annotation.
+
+	If XML or other non-`@Configuration` bean definition resources need to be imported,
+	use the `@ImportResource` annotation instead.
+
+	-------------------------------------------------------------
+	가져올 하나 이상의 컴포넌트 클래스(일반적으로 `@Configuration` 클래스)를 나타냅니다.
+	Spring XML의 <import/> 요소에 해당하는 기능을 제공합니다.
+
+	일반 컴포넌트 클래스 뿐만 아니라, `@Configuration` 클래스, ImportSelector 및 ImportBeanDefinitionRegistrar 구현을 
+	가져올 수 있습니다. (4.2 기준, AnnotationConfigApplicationContext.register와 유사).
+
+	가져온 `@Configuration` 클래스에서 선언된 `@Bean` 정의는 `@Autowired` 주입을 사용하여 액세스해야 합니다.
+	빈 자체가 자동주입 되거나 빈을 선언하는 구성 클래스 인스턴스가 자동주입 될 수 있습니다.
+
+	후자의 접근 방식은 `@Configuration` 클래스 메서드 간에 명시적이고 IDE 친화적인 탐색을 허용합니다.
+	클래스 수준에서 선언하거나 메타주석으로 선언할 수 있습니다.
+
+	XML 또는 기타 `@Configuration`이 아닌 Bean 정의 리소스를 가져와야 하는 경우,
+	대신 `@ImportResource` 주석을 사용하십시오.
+
+	=============================================================
+	Since: 3.0
+	See Also: Configuration, ImportSelector, ImportBeanDefinitionRegistrar, ImportResource
+	Author: Chris Beams, Juergen Hoeller
+
+	=============================================================
+  	Gradle: org.springframework:spring-context:6.0.11
+  			(spring-context-6.0.11.jar)
+
+
+
+********************************************************************************
+06. @AutoConfigureBefore
+********************************************************************************
+
+	org.springframework.boot.autoconfigure
+
+	=============================================================
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE})
+
+	@Documented
+
+	public @interface AutoConfigureBefore extends java.lang.annotation.Annotation
+
+	=============================================================
+	Hint that an auto-configuration should be applied before other specified auto-configuration classes.
+
+	As with standard `@Configuration` classes,the order in which auto-configuration classes are applied only affects the order
+	in which their beans are defined.
+
+	The order in which those beans are subsequently created is unaffected and is determined by each bean's dependencies
+	and any `@DependsOn` relationships.
+
+	-------------------------------------------------------------
+	다른 지정된 자동 구성 클래스보다 먼저 자동 구성을 적용해야 한다는 힌트를 제공합니다.
+
+	표준 `@Configuration` 클래스와 마찬가지로, 자동-구성 클래스가 적용되는 순서는,
+	그들 bean이 정의되는 순서에만 영향을 미칩니다.
+
+	해당 빈이 이후에 생성되는 순서는 영향을 받지 않으며,
+	각 빈의 종속성 및 모든 `@DependsOn` 관계에 따라 결정됩니다.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Phillip Webb
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+
+********************************************************************************
+07. @AutoConfigureAfter
+********************************************************************************
+
+	org.springframework.boot.autoconfigure
+
+	=============================================================
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE})
+
+	@Documented
+
+	public @interface AutoConfigureAfter extends java.lang.annotation.Annotation
+
+	=============================================================
+	Hint for that an auto-configuration should be applied after other specified auto-configuration classes.
+
+	As with standard @Configuration classes,
+	the order in which auto-configuration classes are applied only affects the order in which their beans are defined.
+
+	The order in which those beans are subsequently created is unaffected and is determined by each bean's dependencies
+	and any `@DependsOn` relationships.
+
+	-------------------------------------------------------------
+	다른 지정된 자동-구성 클래스 다음에 자동-구성을 적용해야 한다는 힌트입니다.
+
+	표준 @Configuration 클래스와 마찬가지로, 
+	자동구성 클래스가 적용되는 순서는 Bean이 정의되는 순서에만 영향을 미칩니다.
+
+	해당 빈이 이후에 생성되는 순서는 영향을 받지 않으며,
+	각 빈의 종속성 및 모든 `@DependsOn` 관계에 따라 결정됩니다.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Phillip Webb
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+
+********************************************************************************
+08. @ConditionalOnMissingBean(type = "io.r2dbc.spi.ConnectionFactory")
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional({org.springframework.boot.autoconfigure.condition.OnBeanCondition.class})
+
+	public @interface ConditionalOnMissingBean extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when no beans meeting the specified requirements are already contained in the BeanFactory.
+	None of the requirements must be met for the condition to match and the requirements do not have to be met by the same bean.
+
+	When placed on a `@Bean` method, the bean class defaults to the return type of the factory method:
+
+	  @Configuration
+	  public class MyAutoConfiguration {
+	 
+	      @ConditionalOnMissingBean
+	      @Bean
+	      public MyService myService() {
+	          ...
+	      }
+	 
+	  }
+
+	In the sample above the condition will match if no bean of type MyService is already contained in the BeanFactory.
+
+	The condition can only match the bean definitions that have been processed by the application context so far
+	and, as such, it is strongly recommended to use this condition on auto-configuration classes only.
+
+	If a candidate bean may be created by another auto-configuration, make sure that the one using this condition runs after.
+
+	-------------------------------------------------------------
+	지정된 요구사항을 충족하는 Bean이 이미 BeanFactory에 포함되어 있지 않은 경우에만 일치하는 `@Conditional`.
+	일치하는 조건에 대한 요구사항 중 어느것도 충족되지 않아야 하며, 요구사항이 동일한 Bean에 의해 충족될 필요는 없습니다.
+
+	`@Bean` 메소드에 배치될 때 Bean 클래스는 기본적으로 팩토리 메소드의 리턴유형으로 설정됩니다.
+	위의 샘플에서 MyService 유형의 빈이 이미 BeanFactory에 포함되어 있지 않으면 조건이 일치합니다.
+
+	조건은 지금까지 애플리케이션 컨텍스트에 의해 처리된 Bean 정의와만 일치할 수 있습니다.
+	따라서 자동-구성 클래스에서만 이 조건을 사용하는 것이 좋습니다.
+
+	다른 자동-구성에 의해 후보 bean이 생성될 수 있는 경우, 이 조건을 사용하는 bean이 이후에 실행되는지 확인하십시오.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Phillip Webb, Andy Wilkinson
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+********************************************************************************
+09. @ConditionalOnBean(XADataSourceWrapper.class)
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional({org.springframework.boot.autoconfigure.condition.OnBeanCondition.class})
+
+	public @interface ConditionalOnBean extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when beans meeting all the specified requirements are already contained in the BeanFactory.
+	All the requirements must be met for the condition to match, but they do not have to be met by the same bean.
+
+	When placed on a `@Bean` method, the bean class defaults to the return type of the factory method:
+
+	  @Configuration
+	  public class MyAutoConfiguration {
+	 
+	      @ConditionalOnBean
+	      @Bean
+	      public MyService myService() {
+	          ...
+	      }
+	 
+	  }
+
+	In the sample above the condition will match if a bean of type MyService is already contained in the BeanFactory.
+
+	The condition can only match the bean definitions that have been processed by the application context so far
+	and, as such, it is strongly recommended to use this condition on auto-configuration classes only.
+
+	If a candidate bean may be created by another auto-configuration, make sure that the one using this condition runs after.
+
+	-------------------------------------------------------------
+	지정된 요구사항을 모두 충족하는 Bean이 이미 BeanFactory에 포함되어 있을 때만 일치하는 `@Conditional`.
+	조건이 일치하려면 모든 요구 사항이 충족되어야 하지만 동일한 Bean이 충족할 필요는 없습니다.
+
+	`@Bean` 메소드에 배치될 때 Bean 클래스는 기본적으로 팩토리 메소드의 리턴 유형으로 설정됩니다.
+	위의 샘플에서 MyService 유형의 bean이 이미 BeanFactory에 포함되어 있으면 조건이 일치합니다.
+
+	조건은 지금까지 애플리케이션 컨텍스트에 의해 처리된 Bean 정의와만 일치할 수 있습니다.
+	따라서 자동 구성 클래스에서만 이 조건을 사용하는 것이 좋습니다.
+
+	다른 자동 구성에 의해 후보 bean이 생성될 수 있는 경우, 이 조건을 사용하는 bean이 이후에 실행되는지 확인하십시오.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Phillip Webb
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+********************************************************************************
+10. @Conditional(NotReactiveWebApplicationCondition.class)
+********************************************************************************
+
+	org.springframework.context.annotation
+
+	=============================================================
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	public @interface Conditional extends java.lang.annotation.Annotation
+
+	=============================================================
+	Indicates that a component is only eligible for registration when all specified conditions match.
+
+	A condition is any state that can be determined programmatically
+	before the bean definition is due to be registered (see Condition for details).
+
+	The `@Conditional` annotation may be used in any of the following ways:
+
+		as a type-level annotation on any class directly or indirectly annotated with `@Component`,
+			including `@Configuration` classes
+		as a meta-annotation, for the purpose of composing custom stereotype annotations
+		as a method-level annotation on any `@Bean` method
+
+	If a `@Configuration` class is marked with `@Conditional`, all of the `@Bean` methods, `@Import` annotations, 
+	and `@ComponentScan` annotations associated with that class will be subject to the conditions.
+
+	NOTE: Inheritance of `@Conditional` annotations is not supported; any conditions from superclasses
+		  or from overridden methods will not be considered.
+
+	In order to enforce these semantics, `@Conditional` itself is not declared as `@Inherited`;
+
+	furthermore, any custom composed annotation that is meta-annotated with `@Conditional`
+	must not be declared as `@Inherited`.
+
+	-------------------------------------------------------------
+	지정된 모든 조건이 일치하는 경우에만 하나의 컴포넌트가 등록될 수 있음을 나타냅니다.
+
+	빈 정의가 등록되기 전에, 조건은 프로그래밍 방식으로 결정할 수 있는 모든 상태입니다.
+	(자세한 내용은 조건 참조).
+
+	`@Conditional` 주석은 다음과 같은 방법으로 사용할 수 있습니다:
+
+		- `@Configuration` 클래스 포함하여 `@Component`로 직접 또는 간접적으로 주석이 달린 모든 클래스의 유형-수준 주석으로
+		- 사용자 지정 스테레오타입 주석을 작성하기 위한 메타 주석으로
+		- 모든 `@Bean` 메서드에 대한 메서드 수준 주석으로
+
+	`@Configuration` 클래스가 `@Conditional`로 표시되면,
+	모든 `@Bean` 메서드, `@Import` 주석, 해당 클래스와 관련된 `@ComponentScan` 주석은 조건에 따라 달라집니다.
+
+	참고: `@Conditional` 주석의 상속은 지원되지 않습니다. 수퍼클래스의 모든 조건 또는 재정의된 메서드는 고려되지 않습니다.
+
+	이러한 의미를 적용하기 위해 `@Conditional` 자체는 `@Inherited`로 선언되지 않습니다.
+	또한 `@Conditional`로 메타-주석이 추가된 그 어떤 사용자 정의 구성 주석도 `@Inherited`로 선언하면 안됩니다.
+
+
+	=============================================================
+	Since: 4.0
+	See Also: Condition
+	Author: Phillip Webb, Sam Brannen
+
+	=============================================================
+	Gradle: org.springframework:spring-context:6.0.11
+			(spring-context-6.0.11.jar)
+
+
+
+********************************************************************************
+11. @ImportRuntimeHints(HttpMessageConvertersAutoConfigurationRuntimeHints.class)
+********************************************************************************
+
+	org.springframework.context.annotation
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	public @interface ImportRuntimeHints extends java.lang.annotation.Annotation
+
+	=============================================================
+	Indicates that one or more RuntimeHintsRegistrar implementations should be processed.
+
+	Unlike declaring RuntimeHintsRegistrar using `META-INF/spring/aot.factories`,
+	this annotation allows for more flexible registration where it is only processed
+
+	if the annotated component or bean method is actually registered in the bean factory.
+
+	To illustrate this behavior, consider the following example:
+
+	  @Configuration
+	  public class MyConfiguration {
+	 
+	      @Bean
+	      @ImportRuntimeHints(MyHints.class)
+	      @Conditional(MyCondition.class)
+	      public MyService myService() {
+	          return new MyService();
+	      }
+	 
+	  }
+
+	If the configuration class above is processed, MyHints will be contributed only if MyCondition matches.
+
+	If the condition does not match, MyService will not be defined as a bean
+	and the hints will not be processed either.
+
+	`@ImportRuntimeHints` can also be applied to any test class
+	that uses the Spring TestContext Framework to load an ApplicationContext.
+
+	If several components or test classes refer to the same RuntimeHintsRegistrar implementation,
+	the registrar will only be invoked once for the given bean factory processing or test suite.
+
+	-------------------------------------------------------------
+	하나 이상의 RuntimeHintsRegistrar 구현들이 처리되어야 함을 나타냅니다.
+
+	`META-INF/spring/aot.factories`를 사용하여 RuntimeHintsRegistrar를 선언하는 것과 달리,
+	이 주석은 처리만 되는 경우 보다 유연한 등록을 허용합니다.
+
+	주석이 달린 컴포넌트 또는 빈 메서드가 실제로 빈 팩토리에 등록된 경우.
+
+	이 동작을 설명하려면 다음 예를 고려하십시오.
+	...
+
+	위의 구성 클래스가 처리되면 MyCondition이 일치하는 경우에만 MyHints가 제공됩니다.
+
+	조건이 일치하지 않으면 MyService가 Bean으로 정의되지 않습니다.
+	힌트도 처리되지 않습니다.
+
+	`@ImportRuntimeHints`는 모든 테스트 클래스에도 적용할 수 있습니다.
+	Spring TestContext Framework를 사용하여 ApplicationContext를 로드합니다.
+
+	여러 컴포넌트 또는 테스트 클래스가 동일한 RuntimeHintsRegistrar 구현을 참조하는 경우
+	등록자는 지정된 Bean Factory 처리 또는 test suite에 대해 한 번만 호출됩니다.
+
+	=============================================================
+	Since: 6.0
+
+	See Also: org.springframework.aot.hint.RuntimeHints,
+			  org.springframework.aot.hint.annotation.Reflective,
+			  org.springframework.aot.hint.annotation.RegisterReflectionForBinding
+
+	Author: Brian Clozel, Stephane Nicoll
+
+	=============================================================
+	Gradle: org.springframework:spring-context:6.0.11
+			(spring-context-6.0.11.jar)
+
+
+
+********************************************************************************
+12. @ConditionalOnProperty(
+		prefix = "spring.data.jdbc.repositories",
+		name = "enabled",
+		havingValue = "true",
+		matchIfMissing = true
+	)
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE, ElementType.METHOD})
+
+	@Documented
+
+	@Conditional({org.springframework.boot.autoconfigure.condition.OnPropertyCondition.class})
+
+	public @interface ConditionalOnProperty extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that checks if the specified properties have a specific value.
+
+	By default the properties must be present in the Environment and not equal to false.
+
+	The havingValue() and matchIfMissing() attributes allow further customizations.
+	The havingValue attribute can be used to specify the value that the property should have.
+
+	The table below shows when a condition matches according to the property value and the havingValue() attribute:
+
+
+											Having values
+
+	Property Value   |   havingValue=""   |   havingValue="true"  |   havingValue="false"   |   havingValue="foo"
+	 
+	    "true"                yes                 	 yes                       no                      no
+	    "false"           	   no                     no 	                  yes                      no
+		"foo"                 yes                     no                       no                     yes
+
+
+	If the property is not contained in the Environment at all, the matchIfMissing() attribute is consulted.
+
+	By default missing attributes do not match.
+
+	This condition cannot be reliably used for matching collection properties.
+
+	For example, in the following configuration, 
+	the condition matches if spring.example.values is present in the Environment 
+	but does not match if spring.example.values[0] is present.
+
+	  @ConditionalOnProperty(prefix = "spring", name = "example.values")
+	  class ExampleAutoConfiguration {
+
+	  }
+	  
+	It is better to use a custom condition for such cases.
+
+	-------------------------------------------------------------
+	지정된 속성에 특정값이 있는지 확인하는 `@Conditional`.
+	기본적으로 속성들은 환경에 있어야 하며 false가 아니어야 합니다.
+
+	havingValue() 및 matchIfMissing() 속성은 추가 사용자 정의를 허용합니다.
+	havingValue 속성은 속성이 가져야 하는 값을 지정하는 데 사용할 수 있습니다.
+
+	아래 표는 속성 값과 havingValue() 속성에 따라 조건이 일치하는 경우를 보여줍니다.
+	해당속성이 환경에 전혀 포함되어 있지 않으면 matchIfMissing() 속성이 참조됩니다.
+
+	기본적으로 누락된 속성은 일치하지 않습니다.
+
+	이 조건은 일치하는 컬렉션 속성들에 안정적으로 사용할 수 없습니다.
+
+	예를 들어, 다음 구성에서,
+	환경에 spring.example.values가 있으면 조건이 일치합니다.
+	그러나 spring.example.values[0]이 있으면 일치하지 않습니다.
+
+	이러한 경우에는 사용자 지정 조건을 사용하는 것이 좋습니다.
+
+	=============================================================
+	Since: 1.1.0
+	Author: Maciej Walkowiak, Stephane Nicoll, Phillip Webb
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+
+********************************************************************************
+13. @ConditionalOnRepositoryType(store = "cassandra", type = RepositoryType.REACTIVE)
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.data
+
+	=============================================================
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE, ElementType.METHOD})
+
+	@Documented
+
+	@Conditional({org.springframework.boot.autoconfigure.data.OnRepositoryTypeCondition.class})
+
+	public @interface ConditionalOnRepositoryType extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when a particular type of Spring Data repository has been enabled.
+
+	-------------------------------------------------------------
+	특정 유형의 Spring Data 저장소가 활성화된 경우에만 일치하는 `@Conditional`.
+
+	=============================================================
+	Since: 2.0.0
+	Author: Andy Wilkinson
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2.jar)
+
+
+
+********************************************************************************
+14. @ConditionalOnCloudPlatform
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional(OnCloudPlatformCondition.class)
+
+	public @interface ConditionalOnCloudPlatform extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that matches when the specified cloud platform is active.
+
+	-------------------------------------------------------------
+	지정된 클라우드 플랫폼이 활성일 때 일치하는 `@Conditional`.
+
+	=============================================================
+	Since: 1.5.0
+	Author: Madhura Bhave
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+********************************************************************************
+15. @ConditionalOnExpression
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE,ElementType.METHOD})
+
+	@Documented
+
+	@Conditional(OnExpressionCondition.class)
+
+	public @interface ConditionalOnExpression extends java.lang.annotation.Annotation
+
+	=============================================================
+	Configuration annotation for a conditional element that depends on the value of a SpEL expression.
+
+	Referencing a bean in the expression will cause that bean to be initialized very early
+	in context refresh processing.
+
+	As a result, the bean won't be eligible for post-processing (such as configuration properties binding)
+	and its state may be incomplete.
+
+	-------------------------------------------------------------
+	SpEL 표현식의 값에 따라 달라지는 조건부 요소에 대한 구성 어노테이션 입니다.
+	식에서 빈을 참조하면, 컨텍스트 새로고침 처리에서, 해당 빈이 매우 일찍 초기화됩니다.
+
+	결과적으로 빈은 사후처리(예: 구성속성 바인딩)에 적합하지 않고 그것의 상태가 불완전할 수 있습니다.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Dave Syer
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+16. @ConditionalOnJava
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional(OnJavaCondition.class)
+	
+	public @interface ConditionalOnJava extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that matches based on the JVM version the application is running on.
+
+	-------------------------------------------------------------
+	애플리케이션이 실행중인 JVM 버전에 따라 일치하는 `@Conditional`.
+
+	=============================================================
+	Since: 1.1.0
+	Author: Oliver Gierke, Phillip Webb, Andy Wilkinson
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+17. @ConditionalOnJndi
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional(OnJndiCondition.class)
+
+	public @interface ConditionalOnJndi extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that matches based on the availability of a JNDI InitialContext
+	and the ability to lookup specific locations.
+
+	-------------------------------------------------------------
+	JNDI InitialContext의 가용성과 특정위치를 조회하는 기능에 따라 일치하는 `@Conditional`.
+
+	=============================================================
+	Since: 1.2.0
+	Author: Phillip Webb
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+18. @ConditionalOnMissingClass
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional(OnClassCondition.class)
+
+	public @interface ConditionalOnMissingClass extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when the specified classes are not on the classpath.
+
+	-------------------------------------------------------------
+	지정된 클래스가 클래스 경로에 없을 때만 일치하는 `@Conditional`.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Dave Syer
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+19. @ConditionalOnNotWarDeployment
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	
+	@Documented
+
+	@Conditional(OnWarDeploymentCondition.class)
+
+	public @interface ConditionalOnNotWarDeployment extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when the application is not a traditional WAR deployment.
+
+	For applications with embedded servers, this condition will return true.
+
+	-------------------------------------------------------------
+	응용 프로그램이 기존 WAR 배포가 아닌 경우에만 일치하는 `@Conditional`.
+	임베디드 서버가 있는 애플리케이션의 경우, 이 조건이 true를 반환합니다.
+
+	=============================================================
+	Since: 2.7.10
+	Author: Guirong Hu
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+20. @ConditionalOnNotWebApplication
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+	
+	@Conditional(OnWebApplicationCondition.class)
+	
+	public @interface ConditionalOnNotWebApplication extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when the application context is a not a web application context.
+
+	-------------------------------------------------------------
+	애플리케이션 컨텍스트가 웹 애플리케이션 컨텍스트가 아닌 경우에만 일치하는 `@Conditional`.
+
+	=============================================================
+	Since: 1.0.0
+	Author:	Dave Syer
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+21. @ConditionalOnResource
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional(OnResourceCondition.class)
+
+	public @interface ConditionalOnResource extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that only matches when the specified resources are on the classpath.
+
+	-------------------------------------------------------------
+	지정된 리소스가 클래스 경로에 있을 때만 일치하는 `@Conditional`.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Dave Syer
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+22. @ConditionalOnWarDeployment
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	
+	@Documented
+	
+	@Conditional(OnWarDeploymentCondition.class)
+
+	public @interface ConditionalOnWarDeployment extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that matches when the application is a traditional WAR deployment.
+	For applications with embedded servers, this condition will return false.
+
+	-------------------------------------------------------------
+	응용 프로그램이 기존 WAR 배포일 때 일치하는 `@Conditional`.
+	임베디드 서버가 있는 애플리케이션의 경우, 이 조건은 false를 반환합니다.
+
+	=============================================================
+	Since: 2.3.0
+	Author: Madhura Bhave
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+23. @ConditionalOnWebApplication
+********************************************************************************
+
+	org.springframework.boot.autoconfigure.condition
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Conditional(OnWebApplicationCondition.class)
+
+	public @interface ConditionalOnWebApplication extends java.lang.annotation.Annotation
+
+	=============================================================
+	`@Conditional` that matches when the application is a web application.
+	By default, any web application will match but it can be narrowed using the type() attribute.
+
+	-------------------------------------------------------------
+	애플리케이션이 웹 애플리케이션일 때 일치하는 `@Conditional`.
+	기본적으로 모든 웹 애플리케이션이 일치하지만 type() 속성을 사용하여 범위를 좁힐 수 있습니다.
+
+	=============================================================
+	Since: 1.0.0
+	Author: Dave Syer, Stephane Nicoll
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+24. @EnableAutoConfiguration
+********************************************************************************
+
+	org.springframework.boot.autoconfigure
+
+	=============================================================
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	
+	@Documented
+	
+	@Inherited
+	
+	@AutoConfigurationPackage
+	@Import(AutoConfigurationImportSelector.class)
+
+	public @interface EnableAutoConfiguration extends java.lang.annotation.Annotation
+
+	=============================================================
+	Enable auto-configuration of the Spring Application Context, attempting to guess and configure beans that you are likely to need.
+	Auto-configuration classes are usually applied based on your classpath and what beans you have defined.
+
+	For example, if you have tomcat-embedded.jar on your classpath you are likely to want a TomcatServletWebServerFactory
+	(unless you have defined your own ServletWebServerFactory bean).
+
+	When using @SpringBootApplication,
+	the auto-configuration of the context is automatically enabled and adding this annotation has therefore no additional effect.
+
+	Auto-configuration tries to be as intelligent as possible and will back-away as you define more of your own configuration.
+	You can always manually exclude() any configuration that you never want to apply (use excludeName() if you don't have access to them).
+
+	You can also exclude them through the spring.autoconfigure.exclude property.
+	Auto-configuration is always applied after user-defined beans have been registered.
+	The package of the class that is annotated with @EnableAutoConfiguration, usually through @SpringBootApplication, 
+	has specific significance and is often used as a 'default'. For example, it will be used when scanning for @Entity classes.
+
+	It is generally recommended that you place @EnableAutoConfiguration (if you're not using @SpringBootApplication)
+	in a root package so that all sub-packages and classes can be searched.
+
+	Auto-configuration classes are regular Spring @Configuration beans.
+	They are located using ImportCandidates.
+
+	Generally auto-configuration beans are @Conditional beans
+	(most often using @ConditionalOnClass and @ConditionalOnMissingBean annotations).
+
+	-------------------------------------------------------------
+	필요할 것 같은 빈을 추측하고 구성하려고 시도하면서, Spring 애플리케이션 컨텍스트의 자동-구성을 활성화합니다.
+	자동-구성 클래스는 일반적으로 클래스 경로와 정의한 빈에 따라 적용됩니다.
+
+	예를 들어, 클래스 경로에 tomcat-embedded.jar이 있는 경우, TomcatServletWebServerFactory를 원할 가능성이 높습니다.
+	(자신의 ServletWebServerFactory bean을 정의하지 않은 경우).
+
+	`@SpringBootApplication`을 사용할 때 컨텍스트의 자동-구성이 자동으로 활성화되므로,
+	이 주석을 추가해도 추가효과가 없습니다.
+
+	자동-구성은 가능한 한 지능적으로 시도하고 사용자가 자신의 구성을 더 많이 정의하면 뒤로 물러납니다.
+	적용하지 않으려는 구성은 항상 수동으로 exclude()할 수 있습니다 (액세스할 수 없는 경우, excludeName() 사용).
+
+	spring.autoconfigure.exclude 속성을 통해 제외할 수도 있습니다.
+	자동-구성은 사용자-정의 빈이 등록된 후에 항상 적용됩니다.
+
+	일반적으로 `@SpringBootApplication`을 통해 `@EnableAutoConfiguration`으로 주석이 달린 클래스의 패키지,
+	특별한 의미가 있으며 종종 '기본값'으로 사용됩니다. 예를들어, `@Entity` 클래스를 스캔할 때 사용됩니다.
+
+	일반적으로 @EnableAutoConfiguration을 배치하는 것이 좋습니다( `@SpringBootApplication`을 사용하지 않는 경우 ).
+	모든 하위 패키지와 클래스를 검색할 수 있도록 루트 패키지에 있습니다.
+
+	자동-구성 클래스는 일반 Spring `@Configuration` 빈입니다.
+	ImportCandidates를 사용하여 찾습니다.
+
+	일반적으로 자동-구성 빈은 `@Conditional` 빈입니다
+	(대부분 `@ConditionalOnClass` 및 `@ConditionalOnMissingBean` 주석 사용).
+
+	=============================================================
+	Since: 1.0.0
+	See Also: ConditionalOnBean, ConditionalOnMissingBean, ConditionalOnClass, AutoConfigureAfter, SpringBootApplication
+	Author: Phillip Webb, Stephane Nicoll
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+25. @SpringBootApplication
+********************************************************************************
+
+	org.springframework.boot.autoconfigure
+
+	=============================================================
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+	@Inherited
+
+	@SpringBootConfiguration
+
+	@EnableAutoConfiguration
+
+	@ComponentScan(
+		excludeFilters = {
+			@Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
+			@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class)
+		}
+	)
+
+	public @interface SpringBootApplication extends java.lang.annotation.Annotation
+
+	=============================================================
+	Indicates a configuration class that declares one or more `@Bean` methods and also triggers auto-configuration 
+	and component scanning.
+
+	This is a convenience annotation that is equivalent to declaring 
+	`@SpringBootConfiguration`, `@EnableAutoConfiguration` and `@ComponentScan`.
+
+	-------------------------------------------------------------
+	하나 이상의 `@Bean` 메서드를 선언하고 자동-구성 및 구성요소 스캔을 트리거하는 구성 클래스를 나타냅니다.
+
+	이는 `@SpringBootConfiguration`, `@EnableAutoConfiguration` 및 `@ComponentScan`을 선언하는 것과 동일한 편리한 주석입니다.
+
+	=============================================================
+	Since: 1.2.0
+	Author: Phillip Webb, Stephane Nicoll, Andy Wilkinson
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-autoconfigure:3.1.2
+			(spring-boot-autoconfigure-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+26. @SpringBootConfiguration
+********************************************************************************
+
+	org.springframework.boot
+
+	=============================================================
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Configuration
+
+	@Indexed
+
+	public @interface SpringBootConfiguration extends java.lang.annotation.Annotation
+
+	=============================================================
+	Indicates that a class provides Spring Boot application `@Configuration`.
+	Can be used as an alternative to the Spring's standard `@Configuration` annotation 
+	so that configuration can be found automatically (for example in tests).
+	Application should only ever include one `@SpringBootConfiguration` 
+	and most idiomatic Spring Boot applications will inherit it from `@SpringBootApplication`.
+
+	-------------------------------------------------------------
+	클래스가 Spring Boot 애플리케이션 `@Configuration`을 제공함을 나타냅니다.
+	Spring의 표준 `@Configuration` 주석의 대안으로 사용할 수 있습니다.
+	구성을 자동으로 찾을 수 있습니다(예: 테스트에서).
+	애플리케이션은 하나의 `@SpringBootConfiguration`만 포함해야 합니다.
+	그리고 대부분의 관용적 Spring Boot 애플리케이션은 `@SpringBootApplication`에서 상속합니다.
+
+	=============================================================
+	Since: 1.4.0
+	Author: Phillip Webb, Andy Wilkinson
+
+	=============================================================
+  	Gradle: org.springframework.boot:spring-boot:3.1.2
+  			(spring-boot-3.1.2-sources.jar)
+
+
+
+********************************************************************************
+27. @WebMvcTest
+********************************************************************************
+
+ 	org.springframework.boot.test.autoconfigure.web.servlet
+
+	=============================================================
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+
+	@Inherited
+
+	@BootstrapWith(WebMvcTestContextBootstrapper.class)
+	@ExtendWith(SpringExtension.class)
+
+	@OverrideAutoConfiguration(enabled = false)
+	@TypeExcludeFilters(WebMvcTypeExcludeFilter.class)
+
+	@AutoConfigureCache
+	@AutoConfigureWebMvc
+	@AutoConfigureMockMvc
+
+	@ImportAutoConfiguration
+
+	public @interface WebMvcTest extends java.lang.annotation.Annotation
+
+	=============================================================
+	Annotation that can be used for a Spring MVC test that focuses only on Spring MVC components.
+
+	Using this annotation will disable full auto-configuration and instead apply only configuration relevant to MVC tests
+	(i.e. `@Controller`, `@ControllerAdvice`, `@JsonComponent`, Converter/GenericConverter, Filter, WebMvcConfigurer 
+	      and HandlerMethodArgumentResolver beans but not `@Component`, `@Service` or `@Repository` beans).
+
+	By default, tests annotated with `@WebMvcTest` will also auto-configure Spring Security and MockMvc
+	(include support for HtmlUnit WebClient and Selenium WebDriver).
+
+	For more fine-grained control of MockMVC the `@AutoConfigureMockMvc` annotation can be used.
+
+	Typically `@WebMvcTest` is used in combination with `@MockBean`
+	or `@Import` to create any collaborators required by your `@Controller` beans.
+
+	If you are looking to load your full application configuration and use MockMVC,
+	you should consider `@SpringBootTest` combined with `@AutoConfigureMockMvc` rather than this annotation.
+
+	When using JUnit 4, this annotation should be used in combination with `@RunWith(SpringRunner.class)`.
+
+	=============================================================
+	Since: 1.4.0
+	See Also: AutoConfigureWebMvc, AutoConfigureMockMvc, AutoConfigureCache
+	Author: Phillip Webb, Artsiom Yudovin
+
+	=============================================================
+	Gradle: org.springframework.boot:spring-boot-test-autoconfigure:2.7.14
+			(spring-boot-test-autoconfigure-2.7.14-sources.jar)
+
+
+
+********************************************************************************
+28. @ServletComponentScan
+********************************************************************************
+
+	org.springframework.boot.web.servlet
+
+	=============================================================
+	@Target({ElementType.TYPE})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+	@Import({org.springframework.boot.web.servlet.ServletComponentScanRegistrar.class})
+
+	public @interface ServletComponentScan extends java.lang.annotation.Annotation
+
+	=============================================================
+	Enables scanning for Servlet components (filters, servlets, and listeners).
+	
+	Scanning is only performed when using an `embedded` web server.
+
+	Typically, `one of value`, `basePackages`, or `basePackageClasses` should be specified
+	to control the packages to be scanned for components.
+
+	In their absence, scanning will be performed from the package of the class with the annotation.
+
+	=============================================================
+	Since: 1.3.0
+	See Also: WebServlet, WebFilter, WebListener
+	Author: Andy Wilkinson
+
+	=============================================================
+  	Gradle: org.springframework.boot:spring-boot:2.7.14
+  			(spring-boot-2.7.14.jar)
+
+
+
+********************************************************************************
+29. @AutoConfigureMockMvc
+********************************************************************************
+
+	 org.springframework.boot.test.autoconfigure.web.servlet
+
+	=============================================================
+	@Target({ElementType.TYPE,ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+	@Inherited
+
+	@ImportAutoConfiguration
+
+	@PropertyMapping("spring.test.mockmvc")
+
+	public @interface AutoConfigureMockMvc extends java.lang.annotation.Annotation
+
+	=============================================================
+	Annotation that can be applied to a test class to enable and configure auto-configuration of MockMvc.
+
+	=============================================================
+	Since: 1.4.0
+	See Also: MockMvcAutoConfiguration, SpringBootMockMvcBuilderCustomizer
+	Author: Phillip Webb
+
+	=============================================================
+  	Gradle: org.springframework.boot:spring-boot-test-autoconfigure:2.7.14
+  			(spring-boot-test-autoconfigure-2.7.14.jar)
+
+
+
+********************************************************************************
+30. @ImportAutoConfiguration
+********************************************************************************
+
+	 org.springframework.boot.autoconfigure
+
+	=============================================================
+	@Target({ElementType.TYPE})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Documented
+	@Inherited
+
+	@Import({org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector.class})
+
+	public @interface ImportAutoConfiguration extends java.lang.annotation.Annotation
+
+	=============================================================
+	Import and apply the specified auto-configuration classes.
+
+	Applies the same ordering rules as @EnableAutoConfiguration but restricts the auto-configuration classes to the specified set,
+	rather than consulting ImportCandidates.
+
+	Can also be used to exclude() specific auto-configuration classes such that they will never be applied.
+	Generally, `@EnableAutoConfiguration` should be used in preference to this annotation,
+	however, `@ImportAutoConfiguration` can be useful in some situations and especially when writing tests.
+
+	=============================================================
+	Since: 1.3.0
+	Author: Phillip Webb, Andy Wilkinson
+
+	=============================================================
+  	Gradle: org.springframework.boot:spring-boot-autoconfigure:2.7.14
+  			(spring-boot-autoconfigure-2.7.14.jar)
+
+
+
+********************************************************************************
+31. @EnableJdbcHttpSession
+********************************************************************************
+	 org.springframework.session.jdbc.config.annotation.web.http
+
+	=============================================================
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+
+	@Documented
+	@Import(JdbcHttpSessionConfiguration.class)
+	@Configuration(proxyBeanMethods = false)
+	public @interface EnableJdbcHttpSession extends java.lang.annotation.Annotation
+
+	=============================================================
+	Add this annotation to an @Configuration class to expose the `SessionRepositoryFilter`
+	as a bean named `springSessionRepositoryFilter` and backed by a relational database.
+
+	In order to leverage the annotation, a single `DataSource` must be provided. 
+
+	For example:
+
+	  @Configuration
+	  @EnableJdbcHttpSession
+	  public class JdbcHttpSessionConfig {
+	 
+	      @Bean
+	      public DataSource dataSource() {
+	          return new EmbeddedDatabaseBuilder()
+	                  .setType(EmbeddedDatabaseType.H2)
+	                  .addScript("org/springframework/session/jdbc/schema-h2.sql")
+	                  .build();
+	      } // dataSource
+	 
+	      @Bean
+	      public PlatformTransactionManager transactionManager(DataSource dataSource) {
+	          return new DataSourceTransactionManager(dataSource);
+	      } // transactionManager
+	 
+	  } // end class
+  
+	More advanced configurations can extend `JdbcHttpSessionConfiguration` instead.
+	For additional information on how to configure data access related concerns, 
+	please refer to the Spring Framework Reference Documentation.
+
+	=============================================================
+	Since: 1.2.0
+	See Also: EnableSpringHttpSession
+	Author: Vedran Pavic
+
+	=============================================================
+  	Gradle: org.springframework.session:spring-session-jdbc:2.7.2
+  			(spring-session-jdbc-2.7.2-sources.jar)
+
+
+********************************************************************************
+32. @EnableSpringHttpSession
+********************************************************************************
+	
+	 org.springframework.session.config.annotation.web.http
+
+	=============================================================
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE})
+
+	@Documented
+	@Import(SpringHttpSessionConfiguration.class)
+	@Configuration(proxyBeanMethods = false)
+	public @interface EnableSpringHttpSession extends java.lang.annotation.Annotation
+
+	=============================================================
+	Add this annotation to an @Configuration class to expose the `SessionRepositoryFilter`
+	as a bean named "springSessionRepositoryFilter" and backed by 
+	a user provided implementation of `SessionRepository`.
+
+	In order to leverage the annotation, a single `SessionRepository` bean must be provided.
+
+	For example:
+
+		@Configuration
+		@EnableSpringHttpSession
+		public class SpringHttpSessionConfig {
+
+			@Bean
+			public MapSessionRepository sessionRepository() {
+
+			  return new MapSessionRepository(new ConcurrentHashMap<>());
+			} // sessionRepository
+
+		} // end class
+	   
+	It is important to note that no infrastructure for session expirations is configured for
+	you out of the box.
+
+	This is because things like session expiration are highly implementation dependent.
+
+	This means if you require cleaning up expired sessions, you are responsible for
+	cleaning up the expired sessions.
+
+	The following is provided for you with the base configuration:
+		`SessionRepositoryFilter` - is responsible for wrapping the `HttpServletRequest`
+									with an implementation of `HttpSession` that is backed by a `SessionRepository`
+
+		`SessionEventHttpSessionListenerAdapter` - is responsible for translating Spring Session events into `HttpSessionEvent`.
+									In order for it to work, the implementation of `SessionRepository` 
+									you provide must support `SessionCreatedEvent` and `SessionDestroyedEvent`.
+
+	=============================================================
+	Since: 1.1
+	Author: Rob Winch
+
+	=============================================================
+	Gradle: org.springframework.session:spring-session-core:2.7.2
+			(spring-session-core-2.7.2-sources.jar)
+
+
+********************************************************************************
+33. @WithMockUser
+********************************************************************************
+
+	 org.springframework.security.test.context.support
+
+	=============================================================
+	@Target({ElementType.METHOD, ElementType.TYPE})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Inherited
+	@Documented
+
+	@WithSecurityContext(factory = org.springframework.security.test.context.support.WithMockUserSecurityContextFactory.class)
+
+	public @interface WithMockUser extends java.lang.annotation.Annotation
+
+	=============================================================
+	When used with `WithSecurityContextTestExecutionListener` this annotation can be added to a test method to emulate running with a mocked user.
+
+	In order to work with `MockMvc` The `SecurityContext` that is used will have the following properties:
+
+	The `SecurityContext` created with be that of `SecurityContextHolder.createEmptyContext()`
+	It will be populated with an `UsernamePasswordAuthenticationToken` that uses the username of either `value()` or `username()`,
+	`GrantedAuthority` that are specified by `roles()`, and a password specified by `password()`.
+
+	=============================================================
+	Since: 4.0
+	See Also: WithUserDetails
+	Author: Rob Winch
+
+	=============================================================
+  	Gradle: org.springframework.security:spring-security-test:5.7.10
+  			(spring-security-test-5.7.10.jar)
+
+
+********************************************************************************
+34. @WithAnonymousUser
+********************************************************************************
+	 org.springframework.security.test.context.support
+
+	=============================================================
+	@Target({ElementType.METHOD, ElementType.TYPE})
+	@Retention(RetentionPolicy.RUNTIME)
+
+	@Inherited 
+	@Documented
+
+	@WithSecurityContext(factory = org.springframework.security.test.context.support.WithAnonymousUserSecurityContextFactory.class) 
+
+	public @interface WithAnonymousUser extends java.lang.annotation.Annotation
+
+	=============================================================
+	When used with `WithSecurityContextTestExecutionListener`
+	this annotation can be added to a test method to emulate running with an anonymous user.
+
+	The `SecurityContext` that is used will contain an `AnonymousAuthenticationToken`.
+	
+	This is useful when a user wants to run a majority of tests as a specific user
+	and wishes to override a few methods to be anonymous.
+
+	For example:
+
+	    @WithMockUser
+		public class SecurityTests {
+
+			@Test
+			@WithAnonymousUser
+			public void runAsAnonymous() {
+			  // ... run as an anonymous user ...
+
+			} // runAsAnonymous
+
+			// ... lots of tests ran with a default user ...
+
+		} // end class
+   
+	=============================================================
+	Since: 4.1
+	Author: Rob Winch
+
+	=============================================================
+  	Gradle: org.springframework.security:spring-security-test:5.7.10
+  			(spring-security-test-5.7.10.jar)
+
+
+
+********************************************************************************
+35. @
+********************************************************************************
+
+
+
+
+********************************************************************************
+36. @
+********************************************************************************
+
+
+
+
+********************************************************************************
+37. @
+********************************************************************************
+
